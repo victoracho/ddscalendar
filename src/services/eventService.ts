@@ -1,70 +1,53 @@
-import { format } from 'date-fns'
+import moment from "moment"
+import axios from 'axios'
 import type { FullCalendar as F } from '@/interfaces'
+import { useCalendarStore } from "../stores/calendar";
+import { storeToRefs } from 'pinia'
+import { inject } from 'vue'
 
 export const getData = async (url: string) => {
-	const response = await fetch(url)
-	const data = await response.json()
-	return data
+  const calendarStore = useCalendarStore()
+  const response = await fetch(url)
+  let data = await response.json()
+  calendarStore.quantity = data.quantity
+  return data.results
 }
 
 export const fetchEvent = async ({
-	range,
-	country,
+  range,
 }: {
-	range: string[]
-	country: string
+  range: string[]
 }) => {
-	const baseURL = `https://date.nager.at/api/v3/publicholidays/`
+  const calendarStore = useCalendarStore()
+  const { selectedSubstatus } = storeToRefs(calendarStore)
+  const checked = calendarStore.status.items.filter((x) => x.checked).map((x) => x.name).join("', '")
+  let substatus = selectedSubstatus.value
+  substatus = substatus.substring(1)
+  const eventsForYear = await getData("http://localhost/DDS/appointments.php?range=" + range + "&status=" + checked + "&substatus=" + substatus)
+  return eventsForYear
+}
 
-	const year = format(range[0], 'yyyy')
-	const eventsForYear = await getData(`${baseURL}${year}/${country}`)
-
-	return eventsForYear.map((event: Record<string, string | boolean>) => {
-		event['id'] = event.name
-		event['region'] = country
-		event['title'] = event.name
-		event['start'] = event.date
-		event['allDay'] = true
-
-		return event
-	})
+export const checkEvent = async (deal) => {
+  const deal_id = inject('deal')
+  const user = inject('user')
+  const calendarStore = useCalendarStore()
+  calendarStore.currentUser = user
+  calendarStore.deal_id = deal_id
+  const response = await axios.get('http://localhost/dds/verifyAppt.php?deal_id=' + deal_id)
+  const data = response.data
+  if (data.message == 'found') {
+    calendarStore.currentDeal = data.result
+    calendarStore.deal = data.result
+    calendarStore.getCalendarApi && calendarStore.getCalendarApi.gotoDate(calendarStore.currentDeal.start)
+  }
 }
 
 export default [
-	{
-		events: [
-			{ title: 'Happy New Year', date: '2024-01-01' },
-			{ title: 'On Feb first', date: '2024-02-01' },
-			{ title: 'Lunar day', date: '2024-02-10' },
-			{ title: 'My birthday', date: '2024-02-18' },
-		],
-		backgroundColor: 'green',
-	},
-	{
-		events: (info, successCallback, failureCallback) => {
-			return fetchEvent({
-				range: [info.startStr, info.endStr],
-				country: 'US',
-			})
-		},
-		backgroundColor: 'darkgrey',
-	},
-	{
-		events: (info, successCallback, failureCallback) => {
-			return fetchEvent({
-				range: [info.startStr, info.endStr],
-				country: 'GB',
-			})
-		},
-		backgroundColor: 'brown',
-	},
-	{
-		events: (info, successCallback, failureCallback) => {
-			return fetchEvent({
-				range: [info.startStr, info.endStr],
-				country: 'HK',
-			})
-		},
-		backgroundColor: 'lime',
-	},
+  {
+    events: (info, successCallback, failureCallback) => {
+      return fetchEvent({
+        range: [info.startStr, info.endStr],
+      })
+    },
+  },
 ] as F.EventSourceInput[]

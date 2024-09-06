@@ -3,6 +3,8 @@ export interface CustomEvent {
   title: string
   start: string | Date | null
   end: string | Date | null
+  backgroundColor: string | null
+  substatus: string | null
   contentText?: string
 }
 export interface Timeslot {
@@ -10,6 +12,7 @@ export interface Timeslot {
   end: string | Date | null
 }
 export interface SelectedSlot {
+  add: boolean,
   modal: boolean
   times: Timeslot
 }
