@@ -40,7 +40,6 @@ export const calendarOptions: F.CalendarOptions = {
   weekText: 'W-	',
   selectable: true,
   dayMaxEvents: true,
-  timeZone: 'America/New_York',
   eventStartEditable: true,
 
   eventRemove(arg) {

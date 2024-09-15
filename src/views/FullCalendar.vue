@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import FullCalendar from '@fullcalendar/vue3'
 import EventModal from '@/components/EventModal.vue'
+import Autocomplete from '@/components/Autocomplete.vue'
 import { calendarOptions } from '@/services/calendarOptionService'
 import { useCalendarStore } from '@/stores/calendar';
+
 //import moment from "moment";
 import axios from 'axios'
 import Vue3BasicAutocomplete from 'vue3-basic-autocomplete'
@@ -12,8 +14,6 @@ import debounce from "lodash/debounce"
 const calendarStore = useCalendarStore()
 const fullcalendar = ref()
 const result = ref('')
-const items = ref([
-])
 
 const clickEvent = () => {
   calendarStore.currentDeal = result.value
@@ -27,17 +27,15 @@ const classEvent = (evnt) => {
   return 'my-1 px-1 text-truncate'
 }
 
-const getItems = debounce((name) => {
-  const response = axios.get('http://localhost/dds/searchAppt.php?name=' + name)
+const getItems = (name) => {
+  const response = axios.get('https://dental.dasoddscolor.com/searchAppt.php?name=' + name)
     .then((response) => {
       const data = response.data
       items.value = data
+      console.log(items.value)
     })
-}, 3000)
+}
 
-watch(result, () => {
-  getItems(result.value)
-})
 
 watch(fullcalendar, () => {
   if (fullcalendar.value) {
@@ -52,8 +50,8 @@ watch(fullcalendar, () => {
 <template>
   <BCol cols="6">
     <label> Search Events </label>
-    <vue3-basic-autocomplete v-model="result" @selected="clickEvent" :clear-btn="true" :minlength="1" :options="items"
-      trackby="name" input-class="form-control" />
+    <br>
+    <Autocomplete />
   </BCol>
   <br>
   <FullCalendar :options="calendarOptions" ref="fullcalendar">

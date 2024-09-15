@@ -53,6 +53,12 @@ calendarStore.status.items =
       checked: true,
       name: 'Vip'
     },
+    {
+      hex: '#683696',
+      checked: true,
+      name: 'Missing-appointment'
+    },
+
   ]
 
 watch(calendarStore.status, () => {
@@ -70,7 +76,7 @@ onMounted(() => {
 <template>
   <b-row>
     <b-col cols="12" class="bg-secondary text-white col-xxl-2">
-      <side-nav msg="Calendar DDS">
+      <side-nav msg="Calendar Miami">
         <template v-slot:content>
           <vue-date-picker v-model="date" inline auto-apply :enable-time-picker="false"
             @date-update="dateClicked"></vue-date-picker>
@@ -107,6 +113,9 @@ onMounted(() => {
           </span>
           <span v-if="stat.name == 'Vip'">
             {{ stat.name }} ({{ quantity['vip'] }})
+          </span>
+          <span v-if="stat.name == 'Missing-appointment'">
+            {{ stat.name }} ({{ quantity['missing-appointment'] }})
           </span>
         </label>
       </fieldset>

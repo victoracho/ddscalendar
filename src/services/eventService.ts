@@ -23,7 +23,7 @@ export const fetchEvent = async ({
   const checked = calendarStore.status.items.filter((x) => x.checked).map((x) => x.name).join("', '")
   let substatus = selectedSubstatus.value
   substatus = substatus.substring(1)
-  const eventsForYear = await getData("http://localhost/DDS/appointments.php?range=" + range + "&status=" + checked + "&substatus=" + substatus)
+  const eventsForYear = await getData("https://dental.dasoddscolor.com/appointments.php?range=" + range + "&status=" + checked + "&substatus=" + substatus)
   return eventsForYear
 }
 
@@ -33,7 +33,7 @@ export const checkEvent = async (deal) => {
   const calendarStore = useCalendarStore()
   calendarStore.currentUser = user
   calendarStore.deal_id = deal_id
-  const response = await axios.get('http://localhost/dds/verifyAppt.php?deal_id=' + deal_id)
+  const response = await axios.get('https://dental.dasoddscolor.com/verifyAppt.php?deal_id=' + deal_id)
   const data = response.data
   if (data.message == 'found') {
     calendarStore.currentDeal = data.result

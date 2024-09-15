@@ -10,7 +10,6 @@ const { setModal, setAddedEvents, setSelectedSlot } = calendarStore
 const eventTitle = ref('')
 const activeStatus = ref(false)
 const activeSubstatus = ref(false)
-
 const status = ref(
   [
     {
@@ -32,6 +31,10 @@ const status = ref(
     {
       hex: '#8c2800',
       name: 'Vip'
+    },
+    {
+      hex: '#683696',
+      name: 'Missing-appointment'
     },
   ],
 )
@@ -104,6 +107,7 @@ const addEvent = () => {
   if (!currSubstatus.value && !currStatus.value) {
     error.value = 'you have to select an status and a substatus'
   }
+
   if (currSubstatus.value && currStatus.value) {
     setAddedEvents({
       substatus: currSubstatus.value.toLowerCase(),
@@ -252,6 +256,13 @@ watch(() => selectedSlot.value.modal, () => {
         colorName = 'Vip'
         setStatusColor(color, colorName)
       }
+
+      if (calendarStore.currentEvent.event.extendedProps.status == 'missing-appointment') {
+        color = '#683696'
+        colorName = 'Missing-appointment'
+        setStatusColor(color, colorName)
+      }
+
       // to do substatus and title  
       eventTitle.value = calendarStore.currentEvent.event.title
       var start = moment(calendarStore.currentEvent.event.startStr).utcOffset(-240)
@@ -281,13 +292,11 @@ watch(() => selectedSlot.value.modal, () => {
             </BCol>
             <BCol cols="12" class="p-1">
               <label for="start">Start:</label>
-              <VueDatePicker aria-label="start" timezone="America/New_York" v-model="startDateTime"
-                placeholder="Pick the start time" />
+              <VueDatePicker aria-label="start" v-model="startDateTime" placeholder="Pick the start time" />
             </BCol>
             <BCol cols="12" class="p-1">
               <label for="end">Until:</label>
-              <VueDatePicker aria-label="end" timezone="America/New_York" v-model="endDateTime"
-                placeholder="Pick the End time" />
+              <VueDatePicker aria-label="end" v-model="endDateTime" placeholder="Pick the End time" />
             </BCol>
             <BCol cols="12" class="p-1">
               <BFormTextarea id="textarea" v-model="contentText" placeholder="Enter a description..." rows="3"
@@ -321,6 +330,7 @@ watch(() => selectedSlot.value.modal, () => {
             </BCol>
             <BCol cols="12" class="p-1" v-if="!selectedSlot.add">
               <label for="end">Link to deal:</label>
+              {{ deal.id }}
               <a target="_blank" :href="'https://btx.dds.miami/crm/deal/details/' + deal + '/'">
                 Click Here
               </a>

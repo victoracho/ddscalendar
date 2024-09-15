@@ -82,6 +82,7 @@ export const useCalendarStore = defineStore('calendar', () => {
       'emergency': 0,
       'vip': 0,
       're-evaluation': 0,
+      'missing-appointment': 0,
     }
   )
 
@@ -91,7 +92,7 @@ export const useCalendarStore = defineStore('calendar', () => {
   ) => {
     switch (type) {
       case 'add':
-        const add = axios.post('http://localhost/dds/sendEvent.php',
+        const add = axios.post('https://dental.dasoddscolor.com/sendEvent.php',
           {
             event: value,
             user: currentUser.value,
@@ -109,7 +110,7 @@ export const useCalendarStore = defineStore('calendar', () => {
           })
         break
       case 'edit':
-        const edit = axios.post('http://localhost/dds/editEvent.php',
+        const edit = axios.post('https://dental.dasoddscolor.com/editEvent.php',
           {
             event: value,
             user: currentUser.value,
