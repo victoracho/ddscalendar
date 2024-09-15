@@ -15,6 +15,7 @@ $user = CRest::call(
   ]
 );
 
+
 $lead = $lead['result'];
 $user = $user['result'];
 
