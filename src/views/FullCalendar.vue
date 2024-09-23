@@ -28,7 +28,7 @@ const classEvent = (evnt) => {
 }
 
 const getItems = (name) => {
-  const response = axios.get('https://dental.dasoddscolor.com/searchAppt.php?name=' + name)
+  const response = axios.get('https://newjersey.dasoddscolor.com/searchAppt.php?name=' + name)
     .then((response) => {
       const data = response.data
       items.value = data
