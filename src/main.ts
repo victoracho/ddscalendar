@@ -12,10 +12,12 @@ import FloatingVue from 'floating-vue'
 import VuedatePicker from '@vuepic/vue-datepicker'
 import { pinia } from './stores/calendar';
 import moment from 'moment'
-import Popper from "vue3-popper"
 
 import App from './App.vue'
 import router from './router'
+// BX24.init(function() {
+//   console.log("Bitrix24 API inicializada");
+// })
 
 const app = createApp(App)
 
@@ -32,6 +34,7 @@ app.use(createBootstrap())
 app.use(FloatingVue)
 app.provide('user', user)
 app.provide('deal', deal)
+app.provide('deal_name', deal_name)
 app.component('VueDatePicker', VuedatePicker)
 app.mount('#app')
 

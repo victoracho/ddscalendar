@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
+import { useRouter } from 'vue-router'
+
 import SideNav from "./components/SideNav.vue";
 import { ref, reactive, watch, computed, defineProps, onMounted } from "vue";
 import { useCalendarStore } from "./stores/calendar";
@@ -9,7 +11,7 @@ import { checkEvent } from './services/eventService'
 
 const date = ref(new Date())
 const calendarStore = useCalendarStore()
-const { status, currentDeal, quantity } = storeToRefs(calendarStore)
+const { status, currentDeal, quantity, deal } = storeToRefs(calendarStore)
 const activeSubstatus = ref(false)
 const { selectedSubstatus } = storeToRefs(calendarStore)
 const props = defineProps(['user', 'deal'])
@@ -26,6 +28,7 @@ const selectorSubstatus = computed(() => (!calendarStore.colorSubstatus ? 'Selec
 const dateClicked = (date: string) => {
   calendarStore.getCalendarApi && calendarStore.getCalendarApi.gotoDate(date)
 }
+const router = useRouter()
 calendarStore.status.items =
   [
     {
@@ -49,7 +52,7 @@ calendarStore.status.items =
       name: 'Emergency'
     },
     {
-      hex: '#8c2800',
+      hex: '#0092cc',
       checked: true,
       name: 'Vip'
     },
@@ -69,9 +72,10 @@ watch(selectedSubstatus, () => {
   calendarStore.getCalendarApi.refetchEvents()
 })
 onMounted(() => {
+  // Aquí puedes usar la API de Bitrix24 si es necesario
+  router.push('/')
   checkEvent()
 })
-
 </script>
 <template>
   <b-row>

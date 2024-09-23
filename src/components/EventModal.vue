@@ -5,7 +5,7 @@ import moment from "moment";
 import { useCalendarStore } from '@/stores/calendar';
 import { ref, watch, computed } from 'vue';
 const calendarStore = useCalendarStore()
-const { modal, selectedSlot, currentEvent, currStatus, currSubstatus, currentDeal, deal } = storeToRefs(calendarStore)
+const { modal, selectedSlot, currStatus, currSubstatus, currentDeal, deal, currentEvent } = storeToRefs(calendarStore)
 const { setModal, setAddedEvents, setSelectedSlot } = calendarStore
 const eventTitle = ref('')
 const activeStatus = ref(false)
@@ -29,7 +29,7 @@ const status = ref(
       name: 'Emergency'
     },
     {
-      hex: '#8c2800',
+      hex: '#0092cc',
       name: 'Vip'
     },
     {
@@ -88,7 +88,6 @@ const toggleSubstatus = () => {
 const toggleStatus = () => {
   activeStatus.value = true
 }
-
 const setSubstatusColor = (color, colorName) => {
   selectedSubStatus.value = color
   colorSubstatus.value = colorName
@@ -107,7 +106,7 @@ const addEvent = () => {
   if (!currSubstatus.value && !currStatus.value) {
     error.value = 'you have to select an status and a substatus'
   }
-
+  console.log('sent');
   if (currSubstatus.value && currStatus.value) {
     setAddedEvents({
       substatus: currSubstatus.value.toLowerCase(),
@@ -252,7 +251,7 @@ watch(() => selectedSlot.value.modal, () => {
         setStatusColor(color, colorName)
       }
       if (calendarStore.currentEvent.event.extendedProps.status == 'vip') {
-        color = '#8c2800'
+        color = '#0092cc'
         colorName = 'Vip'
         setStatusColor(color, colorName)
       }
@@ -330,8 +329,8 @@ watch(() => selectedSlot.value.modal, () => {
             </BCol>
             <BCol cols="12" class="p-1" v-if="!selectedSlot.add">
               <label for="end">Link to deal:</label>
-              {{ deal.id }}
-              <a target="_blank" :href="'https://btx.dds.miami/crm/deal/details/' + deal + '/'">
+              <a target="_blank"
+                :href="'https://btx.dds.miami/crm/deal/details/' + currentEvent.event.extendedProps.deal_id + '/'">
                 Click Here
               </a>
             </BCol>

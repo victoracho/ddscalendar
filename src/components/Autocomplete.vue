@@ -34,7 +34,7 @@ export default {
       }
       try {
         // Aquí llamamos a la API con el query
-        const response = await axios.get('http://dental.dasoddscolor.com/searchAppt.php?name=' + searchQuery.value);
+        const response = await axios.get('https://dental.dasoddscolor.com/searchAppt.php?name=' + searchQuery.value);
         filteredSuggestions.value = response.data;
         showSuggestions.value = true;
       } catch (error) {

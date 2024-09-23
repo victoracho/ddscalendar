@@ -17,14 +17,13 @@ export const handleClick = (arg: F.DateClickArg) => {
 }
 
 export const handleSelect = (selectionInfo: any) => {
-  console.log(selectionInfo)
   const calendarStore = useCalendarStore()
   calendarStore.setSelectedSlot({
     add: true,
     modal: true,
     times: {
-      start: selectionInfo.start,
-      end: selectionInfo.end
+      start: selectionInfo.startStr,
+      end: selectionInfo.endStr
     }
   })
 }

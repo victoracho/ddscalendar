@@ -32,7 +32,6 @@ const getItems = (name) => {
     .then((response) => {
       const data = response.data
       items.value = data
-      console.log(items.value)
     })
 }
 
@@ -49,6 +48,7 @@ watch(fullcalendar, () => {
 </script>
 <template>
   <BCol cols="6">
+    <h2>Deal: {{ calendarStore.deal_name }} </h2>
     <label> Search Events </label>
     <br>
     <Autocomplete />

@@ -10,6 +10,7 @@ import events from './eventService'
 import tippy from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 import moment from "moment";
+import 'moment-timezone';
 
 export const openModal = () => {
   const calendarStore = useCalendarStore()
@@ -32,6 +33,7 @@ export const calendarOptions: F.CalendarOptions = {
   themeSystem: 'bootstrap5',
   initialView: 'timeGridDay',
   height: "100%",
+  timeZone: 'America/New_York',
   //locales: allLocales,
   //locale: enLocale, // 'fr'
   nowIndicator: true,
@@ -113,9 +115,12 @@ export const calendarOptions: F.CalendarOptions = {
     }
   },
   eventDidMount: (info) => {
-    const dateCreated = moment(info.event._def.extendedProps.date_created).format('DD/MM/YYYY HH:mm:ss')
+    console.log(info.timeText)
+    const dateCreated = moment(info.event._def.extendedProps.date_created).tz('America/New_York').format('DD/MM/YYYY HH:mm')
+    const dateModified = moment(info.event._def.extendedProps.date_modified).tz('America/New_York').format('DD/MM/YYYY HH:mm')
+    const start = moment(info.event.start).format('DD/MM/YYYY') + ' ' + info.timeText
     tippy(info.el, {
-      content: 'Paciente: ' + info.event.title + "\n" + 'Substatus: ' + info.event._def.extendedProps.substatus + "\n" + 'Usuario de creacion: ' + info.event._def.extendedProps.user + "\n" + 'Telefono: ' + info.event._def.extendedProps.cellphone + "\n" + 'Fecha de creacion: ' + dateCreated + "\n" + 'Usuario de modificacion: ' + info.event._def.extendedProps.user_modified + "\n" + 'Fecha de modificacion: ' + info.event._def.extendedProps.date_modified,
+      content: 'Paciente: ' + info.event.title + "\n" + 'Status: ' + info.event._def.extendedProps.status + "\n" + 'Usuario de creacion: ' + info.event._def.extendedProps.user + "\n" + 'Telefono: ' + info.event._def.extendedProps.phone + "\n" + 'Fecha de creacion: ' + dateCreated + "\n" + 'Fecha de Modificacion: ' + dateModified + "\n" + 'Usuario de modificacion: ' + info.event._def.extendedProps.user_modified + "\n" + 'Fecha de modificacion: ' + info.event._def.extendedProps.date_modified + "\n" + 'Fecha: ' + start + "\n",
       placement: 'top',
       theme: 'light',
     });

@@ -28,5 +28,5 @@ export default defineConfig({
       }
     }
   },
-  base: process.env.NODE_ENV === "production" ? '/vue3-fullcalendar-bootstrap/' : "/",
+  base: process.env.NODE_ENV = "/",
 })

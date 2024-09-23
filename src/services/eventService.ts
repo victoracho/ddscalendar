@@ -29,10 +29,12 @@ export const fetchEvent = async ({
 
 export const checkEvent = async (deal) => {
   const deal_id = inject('deal')
+  const deal_name = inject('deal_name')
   const user = inject('user')
   const calendarStore = useCalendarStore()
   calendarStore.currentUser = user
   calendarStore.deal_id = deal_id
+  calendarStore.deal_name = deal_name
   const response = await axios.get('https://dental.dasoddscolor.com/verifyAppt.php?deal_id=' + deal_id)
   const data = response.data
   if (data.message == 'found') {

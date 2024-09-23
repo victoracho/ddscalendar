@@ -10,6 +10,7 @@ export const useCalendarStore = defineStore('calendar', () => {
   const loading = ref(null)
   const deal = ref(null)
   const deal_id = ref(null)
+  const deal_name = ref('')
   const currentDeal = ref(null)
   const currentUser = ref(null)
   const currStatus = ref(null)
@@ -92,6 +93,7 @@ export const useCalendarStore = defineStore('calendar', () => {
   ) => {
     switch (type) {
       case 'add':
+        console.log('added')
         const add = axios.post('https://dental.dasoddscolor.com/sendEvent.php',
           {
             event: value,
@@ -103,7 +105,7 @@ export const useCalendarStore = defineStore('calendar', () => {
           })
           .then(function(response) {
             alert(response.data.message)
-            location.replace(location.href)
+            getCalendarApi.value && getCalendarApi.value.refetchEvents()
           })
           .catch(() => {
             alert('an error ocurred')
@@ -121,7 +123,7 @@ export const useCalendarStore = defineStore('calendar', () => {
           })
           .then(function(response) {
             alert(response.data.message)
-            location.replace(location.href)
+            getCalendarApi.value && getCalendarApi.value.refetchEvents()
           })
           .catch(() => {
             alert('an error ocurred')
@@ -134,6 +136,7 @@ export const useCalendarStore = defineStore('calendar', () => {
   }
 
   const setSelectedSlot = (value: any) => {
+    console.log(value)
     selectedSlot.value = value
   }
   const setCurrentEvent = (value: any) => {
@@ -149,6 +152,7 @@ export const useCalendarStore = defineStore('calendar', () => {
     currentDeal,
     deal,
     deal_id,
+    deal_name,
     currentUser,
     currStatus,
     currSubstatus,
