@@ -59,7 +59,7 @@ watch(fullcalendar, () => {
       <h6 :class="classEvent(arg.event._def.extendedProps.deal_id)"
         :style="{ 'background-color': arg.event.backgroundColor }">
         <i>
-          <span class="dot" :style="{ 'background-color': arg.event.extendedProps.substatus }"></span>
+          <span class="dot" :style="{ 'background-color': arg.event.extendedProps.substatusColor }"></span>
         </i>
         <span :style="{ 'color': 'black', 'font-weight': 'bold', 'pointer': 'cursor' }">
           &nbsp; {{ arg.event.title }}

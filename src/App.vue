@@ -61,6 +61,21 @@ calendarStore.status.items =
       checked: true,
       name: 'Missing-appointment'
     },
+    {
+      hex: '#039e13',
+      checked: true,
+      name: 'Payed'
+    },
+    {
+      hex: '#ad260e',
+      checked: true,
+      name: 'Not Payed'
+    },
+    {
+      hex: '#808080',
+      checked: false,
+      name: 'Deleted'
+    },
 
   ]
 
@@ -80,7 +95,7 @@ onMounted(() => {
 <template>
   <b-row>
     <b-col cols="12" class="bg-secondary text-white col-xxl-2">
-      <side-nav msg="Calendar Miami">
+      <side-nav msg="New Jersey Miami">
         <template v-slot:content>
           <vue-date-picker v-model="date" inline auto-apply :enable-time-picker="false"
             @date-update="dateClicked"></vue-date-picker>
@@ -120,6 +135,15 @@ onMounted(() => {
           </span>
           <span v-if="stat.name == 'Missing-appointment'">
             {{ stat.name }} ({{ quantity['missing-appointment'] }})
+          </span>
+          <span v-if="stat.name == 'Payed'">
+            {{ stat.name }} ({{ quantity['payed'] }})
+          </span>
+          <span v-if="stat.name == 'Not Payed'">
+            {{ stat.name }} ({{ quantity['not payed'] }})
+          </span>
+          <span v-if="stat.name == 'Deleted'">
+            {{ stat.name }} ({{ quantity['deleted'] }})
           </span>
         </label>
       </fieldset>

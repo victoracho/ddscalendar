@@ -120,7 +120,7 @@ export const calendarOptions: F.CalendarOptions = {
     const dateModified = moment(info.event._def.extendedProps.date_modified).tz('America/New_York').format('DD/MM/YYYY HH:mm')
     const start = moment(info.event.start).format('DD/MM/YYYY') + ' ' + info.timeText
     tippy(info.el, {
-      content: 'Paciente: ' + info.event.title + "\n" + 'Status: ' + info.event._def.extendedProps.status + "\n" + 'Usuario de creacion: ' + info.event._def.extendedProps.user + "\n" + 'Telefono: ' + info.event._def.extendedProps.phone + "\n" + 'Fecha de creacion: ' + dateCreated + "\n" + 'Fecha de Modificacion: ' + dateModified + "\n" + 'Usuario de modificacion: ' + info.event._def.extendedProps.user_modified + "\n" + 'Fecha de modificacion: ' + info.event._def.extendedProps.date_modified + "\n" + 'Fecha: ' + start + "\n",
+      content: 'Paciente: ' + info.event.title + "\n" + 'Status: ' + info.event._def.extendedProps.status + "\n" + 'Substatus: ' + info.event._def.extendedProps.substatus + "\n" + 'Usuario de creacion: ' + info.event._def.extendedProps.user + "\n" + 'Telefono: ' + info.event._def.extendedProps.phone + "\n" + 'Fecha de creacion: ' + dateCreated + "\n" + 'Fecha de Modificacion: ' + dateModified + "\n" + 'Usuario de modificacion: ' + info.event._def.extendedProps.user_modified + "\n" + 'Fecha de modificacion: ' + info.event._def.extendedProps.date_modified + "\n" + 'Fecha: ' + start + "\n",
       placement: 'top',
       theme: 'light',
     });

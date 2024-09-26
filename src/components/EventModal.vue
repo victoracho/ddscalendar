@@ -36,37 +36,53 @@ const status = ref(
       hex: '#683696',
       name: 'Missing-appointment'
     },
+    {
+      hex: '#039e13',
+      name: 'Payed'
+    },
+    {
+      hex: '#ad260e',
+      name: 'Not Payed'
+    },
+    {
+      hex: '#808080',
+      name: 'Deleted'
+    },
   ],
 )
-
 const substatus = ref(
   [
     {
       hex: '#00759A',
-      name: 'Blue'
+      name: 'Confirmed'
     },
     {
       hex: '#f09707',
-      name: 'Orange'
+      name: 'Unconfirmed'
     },
     {
       hex: '#41f007',
-      name: 'Green'
+      name: 'LM + TM'
     },
     {
       hex: '#808080',
-      name: 'Gray'
+      name: 'N/A'
     },
     {
       hex: '#8c2800',
-      name: 'Red'
+      name: 'Phone Disconnected'
     },
     {
       hex: '#d9a4e0',
-      name: 'Pink'
+      name: 'No phone / email'
+    },
+    {
+      hex: '#F0F0F0',
+      name: 'Not Specified'
     },
   ],
 )
+
 const startDateTime = ref<string | Date | null>(new Date())
 const endDateTime = ref<string | Date | null>(addHours(new Date(), 1))
 const contentText = ref('')
@@ -92,7 +108,7 @@ const setSubstatusColor = (color, colorName) => {
   selectedSubStatus.value = color
   colorSubstatus.value = colorName
   activeSubstatus.value = false
-  currSubstatus.value = color
+  currSubstatus.value = colorName
 }
 
 const setStatusColor = (color, colorName) => {
@@ -123,6 +139,7 @@ const editEvent = () => {
   if (!currSubstatus.value && !currStatus.value) {
     error.value = 'you have to select an status and a substatus'
   }
+  console.log(currSubstatus.value)
   if (currSubstatus.value && currStatus.value) {
     setAddedEvents({
       substatus: currSubstatus.value.toLowerCase(),
@@ -192,44 +209,47 @@ watch(() => selectedSlot.value.modal, () => {
       userModified.value = calendarStore.currentEvent.event.extendedProps.user_modified
       dateCreated.value = calendarStore.currentEvent.event.extendedProps.date_created
       dateModified.value = calendarStore.currentEvent.event.extendedProps.date_modified
-
       let color = null
       let colorName = null
-      if (calendarStore.currentEvent.event.extendedProps.substatus == '#00759A') {
+      //Substatus 
+      console.log(calendarStore.currentEvent.event.extendedProps)
+      if (calendarStore.currentEvent.event.extendedProps.substatus == 'confirmed') {
         color = '#00759A'
-        colorName = 'Blue'
+        colorName = 'Confirmed'
         setSubstatusColor(color, colorName)
       }
-      if (calendarStore.currentEvent.event.extendedProps.substatus == '#f09707') {
+      if (calendarStore.currentEvent.event.extendedProps.substatus == 'unconfirmed') {
         color = '#f09707'
-        colorName = 'Orange'
+        colorName = 'Unconfirmed'
         setSubstatusColor(color, colorName)
       }
-      if (calendarStore.currentEvent.event.extendedProps.substatus == '#41f007') {
+      if (calendarStore.currentEvent.event.extendedProps.substatus == 'lm + tm') {
         color = '#41f007'
-        colorName = 'Green'
+        colorName = 'LM + TM'
         setSubstatusColor(color, colorName)
       }
-      if (calendarStore.currentEvent.event.extendedProps.substatus == '#61626b') {
+      if (calendarStore.currentEvent.event.extendedProps.substatus == 'n/a') {
         color = '#808080'
-        colorName = 'Gray'
+        colorName = 'N/A'
         setSubstatusColor(color, colorName)
       }
-      if (calendarStore.currentEvent.event.extendedProps.substatus == '#8c2800') {
+      if (calendarStore.currentEvent.event.extendedProps.substatus == 'phone disconnected') {
         color = '#8c2800'
-        colorName = 'Red'
+        colorName = 'Phone Disconnected'
         setSubstatusColor(color, colorName)
       }
-      if (calendarStore.currentEvent.event.extendedProps.substatus == '#d9a4e0') {
+      if (calendarStore.currentEvent.event.extendedProps.substatus == 'no phone / email') {
         color = '#d9a4e0'
-        colorName = 'Pink'
+        colorName = 'No phone /email'
         setSubstatusColor(color, colorName)
       }
-      if (calendarStore.currentEvent.event.extendedProps.substatus == '#808080') {
-        color = '#808080'
-        colorName = 'Gray'
+      if (calendarStore.currentEvent.event.extendedProps.substatus == 'not specified') {
+        color = '#F0F0F0'
+        colorName = 'Not Specified'
         setSubstatusColor(color, colorName)
       }
+
+      //STATUS 
       if (calendarStore.currentEvent.event.extendedProps.status == 'free eval') {
         color = '#bbecf1'
         colorName = 'Free eval'
@@ -255,10 +275,24 @@ watch(() => selectedSlot.value.modal, () => {
         colorName = 'Vip'
         setStatusColor(color, colorName)
       }
-
       if (calendarStore.currentEvent.event.extendedProps.status == 'missing-appointment') {
         color = '#683696'
         colorName = 'Missing-appointment'
+        setStatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.status == 'payed') {
+        color = '#039e13'
+        colorName = 'Payed'
+        setStatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.status == 'not payed') {
+        color = '#ad260e'
+        colorName = 'Not Payed'
+        setStatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.status == 'deleted') {
+        color = '#808080'
+        colorName = 'Deleted'
         setStatusColor(color, colorName)
       }
 
@@ -458,11 +492,13 @@ select option:before {
 }
 
 .dot {
-  height: 10px;
-  width: 10px;
+  height: 15px;
+  width: 15px;
   background-color: #08258c;
   border-radius: 50%;
   display: inline-block;
+  border-color: black;
+
 }
 
 .wrapper-dropdown {

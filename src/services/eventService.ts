@@ -19,10 +19,9 @@ export const fetchEvent = async ({
   range: string[]
 }) => {
   const calendarStore = useCalendarStore()
-  const { selectedSubstatus } = storeToRefs(calendarStore)
+  const { selectedSubstatus, colorSubstatus } = storeToRefs(calendarStore)
   const checked = calendarStore.status.items.filter((x) => x.checked).map((x) => x.name).join("', '")
-  let substatus = selectedSubstatus.value
-  substatus = substatus.substring(1)
+  let substatus = colorSubstatus.value
   const eventsForYear = await getData("https://newjersey.dasoddscolor.com/appointments.php?range=" + range + "&status=" + checked + "&substatus=" + substatus)
   return eventsForYear
 }

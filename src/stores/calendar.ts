@@ -52,27 +52,31 @@ export const useCalendarStore = defineStore('calendar', () => {
       },
       {
         hex: '#00759A',
-        name: 'Blue'
+        name: 'Confirmed'
       },
       {
         hex: '#f09707',
-        name: 'Orange'
+        name: 'Unconfirmed'
       },
       {
         hex: '#41f007',
-        name: 'Green'
+        name: 'LM + TM'
       },
       {
         hex: '#808080',
-        name: 'Gray'
+        name: 'N/A'
       },
       {
         hex: '#8c2800',
-        name: 'Red'
+        name: 'Phone Disconnected'
       },
       {
         hex: '#d9a4e0',
-        name: 'Pink'
+        name: 'No phone / email'
+      },
+      {
+        hex: '#F0F0F0',
+        name: 'Not Specified'
       },
     ],
   )
@@ -84,6 +88,9 @@ export const useCalendarStore = defineStore('calendar', () => {
       'vip': 0,
       're-evaluation': 0,
       'missing-appointment': 0,
+      'payed': 0,
+      'not payed': 0,
+      'deleted': 0
     }
   )
 
@@ -93,7 +100,6 @@ export const useCalendarStore = defineStore('calendar', () => {
   ) => {
     switch (type) {
       case 'add':
-        console.log('added')
         const add = axios.post('https://newjersey.dasoddscolor.com/sendEvent.php',
           {
             event: value,
@@ -136,7 +142,6 @@ export const useCalendarStore = defineStore('calendar', () => {
   }
 
   const setSelectedSlot = (value: any) => {
-    console.log(value)
     selectedSlot.value = value
   }
   const setCurrentEvent = (value: any) => {
