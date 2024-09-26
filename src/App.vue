@@ -95,7 +95,7 @@ onMounted(() => {
 <template>
   <b-row>
     <b-col cols="12" class="bg-secondary text-white col-xxl-2">
-      <side-nav msg="New Jersey Miami">
+      <side-nav msg="New Jersey Calendar">
         <template v-slot:content>
           <vue-date-picker v-model="date" inline auto-apply :enable-time-picker="false"
             @date-update="dateClicked"></vue-date-picker>
