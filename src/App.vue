@@ -32,51 +32,55 @@ const router = useRouter()
 calendarStore.status.items =
   [
     {
-      hex: '#bbecf1',
-      name: 'Free Eval',
+      hex: '#00afc7',
+      name: 'Evaluation',
       checked: true
     },
     {
-      hex: '#fff55a',
+      hex: '#10e5fc',
       checked: true,
-      name: 'Re-evaluation'
+      name: 'Follow Up'
     },
     {
-      hex: '#f10057',
+      hex: '#bd7ac9',
       checked: true,
-      name: 'Evaluation'
+      name: 'Hyperbaric Chamber'
     },
     {
       hex: '#e89b06',
       checked: true,
-      name: 'Emergency'
+      name: 'Labs'
     },
     {
-      hex: '#0092cc',
+      hex: '#e97090',
       checked: true,
-      name: 'Vip'
+      name: 'Massage'
     },
     {
-      hex: '#683696',
+      hex: '#00ff00',
       checked: true,
-      name: 'Missing-appointment'
+      name: 'Post-op'
     },
     {
-      hex: '#039e13',
+      hex: '#fff300',
       checked: true,
-      name: 'Payed'
+      name: 'Pre-op appt'
     },
     {
-      hex: '#ad260e',
+      hex: '#b57051',
       checked: true,
-      name: 'Not Payed'
+      name: 'Pre-op surgery'
+    },
+    {
+      hex: '#b57051',
+      checked: true,
+      name: 'Surgery'
     },
     {
       hex: '#808080',
       checked: false,
       name: 'Deleted'
     },
-
   ]
 
 watch(calendarStore.status, () => {
@@ -95,7 +99,7 @@ onMounted(() => {
 <template>
   <b-row>
     <b-col cols="12" class="bg-secondary text-white col-xxl-2">
-      <side-nav msg="New Jersey Calendar">
+      <side-nav msg="Daso Calendar">
         <template v-slot:content>
           <vue-date-picker v-model="date" inline auto-apply :enable-time-picker="false"
             @date-update="dateClicked"></vue-date-picker>

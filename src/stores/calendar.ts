@@ -101,7 +101,7 @@ export const useCalendarStore = defineStore('calendar', () => {
     console.log(value)
     switch (type) {
       case 'add':
-        const add = axios.post('https://newjersey.dasoddscolor.com/sendEvent.php',
+        const add = axios.post('https://daso.dasoddscolor.com/sendEvent.php',
           {
             event: value,
             user: currentUser.value,
@@ -119,7 +119,7 @@ export const useCalendarStore = defineStore('calendar', () => {
           })
         break
       case 'edit':
-        const edit = axios.post('https://newjersey.dasoddscolor.com/editEvent.php',
+        const edit = axios.post('https://daso.dasoddscolor.com/editEvent.php',
           {
             event: value,
             user: currentUser.value,

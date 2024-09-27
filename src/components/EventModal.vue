@@ -284,7 +284,6 @@ watch(() => selectedSlot.value.modal, () => {
       let color = null
       let colorName = null
       //Substatus 
-      console.log(calendarStore.currentEvent.event.extendedProps)
       if (calendarStore.currentEvent.event.extendedProps.substatus == 'confirmed') {
         color = '#00759A'
         colorName = 'Confirmed'
@@ -362,6 +361,7 @@ watch(() => selectedSlot.value.modal, () => {
         colorName = 'Not Payed'
         setStatusColor(color, colorName)
       }
+
       if (calendarStore.currentEvent.event.extendedProps.status == 'deleted') {
         color = '#808080'
         colorName = 'Deleted'
@@ -465,7 +465,7 @@ watch(() => selectedSlot.value.modal, () => {
             <BCol cols="12" class="p-1" v-if="!selectedSlot.add">
               <label for="end">Link to deal:</label>
               <a target="_blank"
-                :href="'https://btx.dds.miami/crm/deal/details/' + currentEvent.event.extendedProps.deal_id + '/'">
+                :href="'https://daso.dds.miami/crm/deal/details/' + currentEvent.event.extendedProps.deal_id + '/'">
                 Click Here
               </a>
             </BCol>
