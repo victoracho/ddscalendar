@@ -276,7 +276,6 @@ watch(() => selectedSlot.value.modal, () => {
       if (calendarStore.currentEvent.event.extendedProps.more_invoices == '1') {
         more_invoices.value = true
       }
-
       // si no tiene ninguna de las opciones   
       if (!transportation.value && !lodging.value) {
         none.value = true;
@@ -423,21 +422,6 @@ watch(() => selectedSlot.value.modal, () => {
                 max-rows="6" />
             </BCol>
             <BCol cols="12" class="p-1">
-              <input type="checkbox" id="accented-light" v-model="lodging" :checked="lodging">
-              <span>
-                Lodging
-              </span>
-              <input type="checkbox" id="accented-light" v-model="transportation" :checked="transportation">
-              <span>
-                Transportation
-              </span>
-              <input type="checkbox" id="accented-light" v-model="none"
-                :checked="!lodging && !transportation ? true : false">
-              <span>
-                None
-              </span>
-            </BCol>
-            <BCol cols="12" class="p-1">
               <label for="end">Status:</label>
               <div id="color-picker">
                 <div class="wrapper-dropdown">
@@ -462,6 +446,21 @@ watch(() => selectedSlot.value.modal, () => {
                   </ul>
                 </div>
               </div>
+            </BCol>
+            <BCol cols="12" class="p-1">
+              <input type="checkbox" id="accented-light" v-model="lodging" :checked="lodging">
+              <span>
+                Lodging
+              </span>
+              <input type="checkbox" id="accented-light" v-model="transportation" :checked="transportation">
+              <span>
+                Transportation
+              </span>
+              <input type="checkbox" id="accented-light" v-model="none"
+                :checked="!lodging && !transportation ? true : false">
+              <span>
+                None
+              </span>
             </BCol>
             <BCol cols="12" class="p-1" v-if="!selectedSlot.add">
               <label for="end">Link to deal:</label>
