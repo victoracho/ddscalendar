@@ -98,6 +98,7 @@ const selectedStatus = ref('')
 const colorSubstatus = ref('')
 const colorStatus = ref('')
 const error = ref(null)
+const none = ref(null)
 const titleState = computed(() => (eventTitle.value?.length > 2 ? true : false))
 const amountState = computed(() => (amount.value?.length > 0 ? true : false))
 const selectorSubstatus = computed(() => (!selectedSubStatus.value ? 'Select a Substatus' : '<span style="background: ' + selectedSubStatus.value + '"></span> ' + colorSubstatus.value))
@@ -127,10 +128,16 @@ const setStatusColor = (color, colorName) => {
 }
 
 const addEvent = () => {
+  error.value = null;
   if (!currSubstatus.value && !currStatus.value) {
     error.value = 'you have to select an status and a substatus'
   }
-  if (currSubstatus.value && currStatus.value) {
+
+  if (!transportation.value && !lodging.value && !none.value) {
+    error.value = 'you have to select a tranportation option'
+  }
+
+  if (!error.value) {
     setAddedEvents({
       substatus: currSubstatus.value.toLowerCase(),
       BackgroundColor: currStatus.value.toLowerCase(),
@@ -202,6 +209,25 @@ const closeModal = () => {
   dateModified.value = null
 }
 
+watch(() => none.value, () => {
+  if (none.value == true) {
+    transportation.value = false
+    lodging.value = false
+  }
+})
+watch(() => lodging.value, () => {
+  if (lodging.value == true) {
+    if (none.value) {
+      none.value = false
+    }
+  }
+})
+watch(() => transportation.value, () => {
+  if (transportation.value == true) {
+    none.value = false
+  }
+})
+
 watch(() => selectedSlot.value.modal, () => {
   if (selectedSlot.value.modal) {
     // cuando le dan click para agregar
@@ -249,6 +275,11 @@ watch(() => selectedSlot.value.modal, () => {
       more_invoices.value = false
       if (calendarStore.currentEvent.event.extendedProps.more_invoices == '1') {
         more_invoices.value = true
+      }
+
+      // si no tiene ninguna de las opciones   
+      if (!transportation.value && !lodging.value) {
+        none.value = true;
       }
 
       let color = null
@@ -374,6 +405,10 @@ watch(() => selectedSlot.value.modal, () => {
             <BCol cols="12" class="p-1">
               <label for="title">Invoice Number:</label>
               <BFormInput id="title" v-model="invoice_number" placeholder="Enter invoice number" trim />
+              <input type="checkbox" id="accented-light" v-model="more_invoices" :checked="more_invoices">
+              <span>
+                More Invoices
+              </span>
             </BCol>
             <BCol cols="12" class="p-1">
               <label for="start">Start:</label>
@@ -390,15 +425,16 @@ watch(() => selectedSlot.value.modal, () => {
             <BCol cols="12" class="p-1">
               <input type="checkbox" id="accented-light" v-model="lodging" :checked="lodging">
               <span>
-                More Invoices
-              </span>
-              <input type="checkbox" id="accented-light" v-model="more_invoices" :checked="more_invoices">
-              <span>
                 Lodging
               </span>
               <input type="checkbox" id="accented-light" v-model="transportation" :checked="transportation">
               <span>
                 Transportation
+              </span>
+              <input type="checkbox" id="accented-light" v-model="none"
+                :checked="!lodging && !transportation ? true : false">
+              <span>
+                None
               </span>
             </BCol>
             <BCol cols="12" class="p-1">
