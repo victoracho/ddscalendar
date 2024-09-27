@@ -469,7 +469,7 @@ watch(() => selectedSlot.value.modal, () => {
                 Click Here
               </a>
             </BCol>
-            <div v-if="dateCreated">
+            <div>
               <BCol cols="12" class="p-1">
                 <label for="end">User created: {{ userCreated }}</label>
               </BCol>
@@ -482,12 +482,10 @@ watch(() => selectedSlot.value.modal, () => {
               <BCol cols="12" class="p-1">
                 <label for="end">Date Modified: {{ dateModified }} </label>
               </BCol>
-            </div>
-            <BCol cols="12" class="p-1" v-if="error">
               <div style="color: red;">
                 {{ error }}
               </div>
-            </BCol>
+            </div>
           </div>
         </BCardBody>
         <template v-slot:footer>
