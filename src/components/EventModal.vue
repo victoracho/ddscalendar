@@ -10,6 +10,13 @@ const { setModal, setAddedEvents, setSelectedSlot } = calendarStore
 const eventTitle = ref('')
 const activeStatus = ref(false)
 const activeSubstatus = ref(false)
+//  more fields 
+const amount = ref(null)
+const invoice_number = ref('')
+const more_invoices = ref(false)
+const transportation = ref(false)
+const lodging = ref(false)
+
 const status = ref(
   [
     {
@@ -92,6 +99,7 @@ const colorSubstatus = ref('')
 const colorStatus = ref('')
 const error = ref(null)
 const titleState = computed(() => (eventTitle.value?.length > 2 ? true : false))
+const amountState = computed(() => (amount.value?.length > 0 ? true : false))
 const selectorSubstatus = computed(() => (!selectedSubStatus.value ? 'Select a Substatus' : '<span style="background: ' + selectedSubStatus.value + '"></span> ' + colorSubstatus.value))
 const selectorStatus = computed(() => (!selectedStatus.value ? 'Select a Status' : '<span style="background: ' + selectedStatus.value + '"></span> ' + colorStatus.value))
 const userCreated = ref(null)
@@ -122,7 +130,6 @@ const addEvent = () => {
   if (!currSubstatus.value && !currStatus.value) {
     error.value = 'you have to select an status and a substatus'
   }
-  console.log('sent');
   if (currSubstatus.value && currStatus.value) {
     setAddedEvents({
       substatus: currSubstatus.value.toLowerCase(),
@@ -131,6 +138,11 @@ const addEvent = () => {
       end: endDateTime.value,
       title: eventTitle.value,
       text: contentText.value,
+      amount: amount.value,
+      invoice_number: invoice_number.value,
+      transportation: transportation.value,
+      lodging: lodging.value,
+      more_invoices: more_invoices.value,
     }, 'add')
     closeModal()
   }
@@ -139,7 +151,6 @@ const editEvent = () => {
   if (!currSubstatus.value && !currStatus.value) {
     error.value = 'you have to select an status and a substatus'
   }
-  console.log(currSubstatus.value)
   if (currSubstatus.value && currStatus.value) {
     setAddedEvents({
       substatus: currSubstatus.value.toLowerCase(),
@@ -148,6 +159,11 @@ const editEvent = () => {
       end: endDateTime.value,
       title: eventTitle.value,
       text: contentText.value,
+      amount: amount.value,
+      invoice_number: invoice_number.value,
+      transportation: transportation.value,
+      lodging: lodging.value,
+      more_invoices: more_invoices.value,
     }, 'edit')
     closeModal()
   }
@@ -199,6 +215,13 @@ watch(() => selectedSlot.value.modal, () => {
       userModified.value = null
       dateCreated.value = null
       dateModified.value = null
+      // campos adicionales
+      amount.value = null
+      invoice_number.value = null
+      lodging.value = null
+      transportation.value = null
+      more_invoices.value = null
+
       startDateTime.value = selectedSlot.value.times.start
       endDateTime.value = selectedSlot.value.times.end
     }
@@ -209,6 +232,25 @@ watch(() => selectedSlot.value.modal, () => {
       userModified.value = calendarStore.currentEvent.event.extendedProps.user_modified
       dateCreated.value = calendarStore.currentEvent.event.extendedProps.date_created
       dateModified.value = calendarStore.currentEvent.event.extendedProps.date_modified
+      // campos adicionales 
+      amount.value = calendarStore.currentEvent.event.extendedProps.amount
+      invoice_number.value = calendarStore.currentEvent.event.extendedProps.invoice_number
+
+      lodging.value = false
+      if (calendarStore.currentEvent.event.extendedProps.lodging == '1') {
+        lodging.value = true
+      }
+
+      transportation.value = false
+      if (calendarStore.currentEvent.event.extendedProps.transportation == '1') {
+        transportation.value = true
+      }
+
+      more_invoices.value = false
+      if (calendarStore.currentEvent.event.extendedProps.more_invoices == '1') {
+        more_invoices.value = true
+      }
+
       let color = null
       let colorName = null
       //Substatus 
@@ -324,6 +366,16 @@ watch(() => selectedSlot.value.modal, () => {
               <BFormInvalidFeedback id="input-live-feedback"> Enter at least 3 letters </BFormInvalidFeedback>
             </BCol>
             <BCol cols="12" class="p-1">
+              <label for="title">Amount:</label>
+              <BFormInput id="title" v-model="amount" type="number" placeholder="Enter Amount" :state="amountState"
+                trim />
+              <BFormInvalidFeedback id="input-live-feedback"> Enter at least 0 </BFormInvalidFeedback>
+            </BCol>
+            <BCol cols="12" class="p-1">
+              <label for="title">Invoice Number:</label>
+              <BFormInput id="title" v-model="invoice_number" placeholder="Enter invoice number" trim />
+            </BCol>
+            <BCol cols="12" class="p-1">
               <label for="start">Start:</label>
               <VueDatePicker aria-label="start" v-model="startDateTime" placeholder="Pick the start time" />
             </BCol>
@@ -334,6 +386,20 @@ watch(() => selectedSlot.value.modal, () => {
             <BCol cols="12" class="p-1">
               <BFormTextarea id="textarea" v-model="contentText" placeholder="Enter a description..." rows="3"
                 max-rows="6" />
+            </BCol>
+            <BCol cols="12" class="p-1">
+              <input type="checkbox" id="accented-light" v-model="lodging" :checked="lodging">
+              <span>
+                More Invoices
+              </span>
+              <input type="checkbox" id="accented-light" v-model="more_invoices" :checked="more_invoices">
+              <span>
+                Lodging
+              </span>
+              <input type="checkbox" id="accented-light" v-model="transportation" :checked="transportation">
+              <span>
+                Transportation
+              </span>
             </BCol>
             <BCol cols="12" class="p-1">
               <label for="end">Status:</label>

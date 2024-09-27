@@ -95,9 +95,10 @@ export const useCalendarStore = defineStore('calendar', () => {
   )
 
   const setAddedEvents = async (
-    value: CustomEvent | string | number,
+    value: any,
     type: string
   ) => {
+    console.log(value)
     switch (type) {
       case 'add':
         const add = axios.post('https://dental.dasoddscolor.com/sendEvent.php',
