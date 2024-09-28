@@ -20,40 +20,48 @@ const lodging = ref(false)
 const status = ref(
   [
     {
-      hex: '#bbecf1',
-      name: 'Free Eval'
-    },
-    {
-      hex: '#fff55a',
-      name: 'Re-evaluation'
-    },
-    {
-      hex: '#f10057',
+      hex: '#00afc7',
       name: 'Evaluation'
     },
     {
+      hex: '#10e5fc',
+      name: 'Follow up'
+    },
+    {
+      hex: '#bd7ac9',
+      name: 'Hyperbaric Chamber'
+    },
+    {
       hex: '#e89b06',
-      name: 'Emergency'
+      name: 'Labs'
     },
     {
       hex: '#0092cc',
       name: 'Vip'
     },
     {
-      hex: '#683696',
+      hex: '#e97090',
+      name: 'Massage'
+    },
+    {
+      hex: '#00ff00',
+      name: 'Post-op'
+    },
+    {
+      hex: '#fff300',
+      name: 'Pre-op appt'
+    },
+    {
+      hex: '#b57051',
+      name: 'Pre-op Surgery'
+    },
+    {
+      hex: '#86b100',
+      name: 'Surgery'
+    },
+    {
+      hex: '#7b03fc',
       name: 'Missing-appointment'
-    },
-    {
-      hex: '#039e13',
-      name: 'Payed'
-    },
-    {
-      hex: '#ad260e',
-      name: 'Not Payed'
-    },
-    {
-      hex: '#808080',
-      name: 'Deleted'
     },
   ],
 )
@@ -321,53 +329,56 @@ watch(() => selectedSlot.value.modal, () => {
       }
 
       //STATUS 
-      if (calendarStore.currentEvent.event.extendedProps.status == 'free eval') {
-        color = '#bbecf1'
-        colorName = 'Free eval'
-        setStatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.status == 're-evaluation') {
-        color = '#fff55a'
-        colorName = 'Re-evaluation'
-        setStatusColor(color, colorName)
-      }
       if (calendarStore.currentEvent.event.extendedProps.status == 'evaluation') {
-        color = '#f10057'
+        color = '#00afc7'
         colorName = 'Evaluation'
         setStatusColor(color, colorName)
       }
-      if (calendarStore.currentEvent.event.extendedProps.status == 'emergency') {
-        color = '#e89b06'
-        colorName = 'Emergency'
+      if (calendarStore.currentEvent.event.extendedProps.status == 'follow up') {
+        color = '#10e5fc'
+        colorName = 'Follow up'
         setStatusColor(color, colorName)
       }
-      if (calendarStore.currentEvent.event.extendedProps.status == 'vip') {
-        color = '#0092cc'
-        colorName = 'Vip'
+      if (calendarStore.currentEvent.event.extendedProps.status == 'hyperbaric chamber') {
+        color = '#bd7ac9'
+        colorName = 'Hyperbaric chamber'
+        setStatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.status == 'labs') {
+        color = '#e89b06'
+        colorName = 'Labs'
+        setStatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.status == 'massage') {
+        color = '#e97090'
+        colorName = 'Massage'
+        setStatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.status == 'post-op') {
+        color = '#00ff00'
+        colorName = 'Post-op'
+        setStatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.status == 'pre-op appt') {
+        color = '#fff300'
+        colorName = 'Pre-op appt'
+        setStatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.status == 'pre-op surgery') {
+        color = '#b57051'
+        colorName = 'Pre-op surgery'
+        setStatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.status == 'surgery') {
+        color = '#86b100'
+        colorName = 'Surgery'
         setStatusColor(color, colorName)
       }
       if (calendarStore.currentEvent.event.extendedProps.status == 'missing-appointment') {
-        color = '#683696'
-        colorName = 'Missing-appointment'
+        color = '#7b03fc'
+        colorName = 'Missing Appointment'
         setStatusColor(color, colorName)
       }
-      if (calendarStore.currentEvent.event.extendedProps.status == 'payed') {
-        color = '#039e13'
-        colorName = 'Payed'
-        setStatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.status == 'not payed') {
-        color = '#ad260e'
-        colorName = 'Not Payed'
-        setStatusColor(color, colorName)
-      }
-
-      if (calendarStore.currentEvent.event.extendedProps.status == 'deleted') {
-        color = '#808080'
-        colorName = 'Deleted'
-        setStatusColor(color, colorName)
-      }
-
       // to do substatus and title  
       eventTitle.value = calendarStore.currentEvent.event.title
       var start = moment(calendarStore.currentEvent.event.startStr).utcOffset(-240)
