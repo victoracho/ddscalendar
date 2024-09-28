@@ -82,15 +82,16 @@ export const useCalendarStore = defineStore('calendar', () => {
   )
   const quantity = ref(
     {
-      'free eval': 0,
       'evaluation': 0,
-      'emergency': 0,
-      'vip': 0,
-      're-evaluation': 0,
+      'follow up': 0,
+      'hyperbaric chamber': 0,
+      'labs': 0,
+      'massage': 0,
+      'post-op': 0,
+      'pre-op appt': 0,
+      'pre-op surgery': 0,
+      'surgery': 0,
       'missing-appointment': 0,
-      'payed': 0,
-      'not payed': 0,
-      'deleted': 0
     }
   )
 

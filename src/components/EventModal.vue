@@ -36,10 +36,6 @@ const status = ref(
       name: 'Labs'
     },
     {
-      hex: '#0092cc',
-      name: 'Vip'
-    },
-    {
       hex: '#e97090',
       name: 'Massage'
     },

@@ -67,7 +67,7 @@ calendarStore.status.items =
       name: 'Pre-op appt'
     },
     {
-      hex: '#b57051',
+      hex: '#f69ac1',
       checked: true,
       name: 'Pre-op surgery'
     },
@@ -77,9 +77,9 @@ calendarStore.status.items =
       name: 'Surgery'
     },
     {
-      hex: '#808080',
+      hex: '#7b03fc',
       checked: false,
-      name: 'Deleted'
+      name: 'Missing-appointment'
     },
   ]
 
@@ -122,32 +122,35 @@ onMounted(() => {
         <label for="default-light" v-for="stat in status.items">
           <input :style="{ 'accent-color': stat.hex }" type="checkbox" id="accented-light" :checked="stat.checked"
             @click="stat.checked = !stat.checked">
-          <span v-if="stat.name == 'Free Eval'">
-            {{ stat.name }} ({{ quantity['free eval'] }})
-          </span>
           <span v-if="stat.name == 'Evaluation'">
             {{ stat.name }} ({{ quantity['evaluation'] }})
           </span>
-          <span v-if="stat.name == 'Re-evaluation'">
-            {{ stat.name }} ({{ quantity['re-evaluation'] }})
+          <span v-if="stat.name == 'Follow Up'">
+            {{ stat.name }} ({{ quantity['follow up'] }})
           </span>
-          <span v-if="stat.name == 'Emergency'">
-            {{ stat.name }} ({{ quantity['emergency'] }})
+          <span v-if="stat.name == 'Hyperbaric Chamber'">
+            {{ stat.name }} ({{ quantity['hyperbaric chamber'] }})
           </span>
-          <span v-if="stat.name == 'Vip'">
-            {{ stat.name }} ({{ quantity['vip'] }})
+          <span v-if="stat.name == 'Labs'">
+            {{ stat.name }} ({{ quantity['labs'] }})
+          </span>
+          <span v-if="stat.name == 'Massage'">
+            {{ stat.name }} ({{ quantity['massage'] }})
+          </span>
+          <span v-if="stat.name == 'Post-op'">
+            {{ stat.name }} ({{ quantity['post-op'] }})
+          </span>
+          <span v-if="stat.name == 'Pre-op appt'">
+            {{ stat.name }} ({{ quantity['pre-op appt'] }})
+          </span>
+          <span v-if="stat.name == 'Pre-op surgery'">
+            {{ stat.name }} ({{ quantity['pre-op appt'] }})
+          </span>
+          <span v-if="stat.name == 'Surgery'">
+            {{ stat.name }} ({{ quantity['surgery'] }})
           </span>
           <span v-if="stat.name == 'Missing-appointment'">
             {{ stat.name }} ({{ quantity['missing-appointment'] }})
-          </span>
-          <span v-if="stat.name == 'Payed'">
-            {{ stat.name }} ({{ quantity['payed'] }})
-          </span>
-          <span v-if="stat.name == 'Not Payed'">
-            {{ stat.name }} ({{ quantity['not payed'] }})
-          </span>
-          <span v-if="stat.name == 'Deleted'">
-            {{ stat.name }} ({{ quantity['deleted'] }})
           </span>
         </label>
       </fieldset>
