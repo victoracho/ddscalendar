@@ -256,8 +256,16 @@ watch(() => selectedSlot.value.modal, () => {
       contentText.value = calendarStore.currentEvent.event.extendedProps.comment
       userCreated.value = calendarStore.currentEvent.event.extendedProps.user
       userModified.value = calendarStore.currentEvent.event.extendedProps.user_modified
+
       dateCreated.value = calendarStore.currentEvent.event.extendedProps.date_created
+      if (dateCreated.value) {
+        dateCreated.value = moment(dateCreated.value).format('YYYY-MM-DD hh:mm')
+      }
       dateModified.value = calendarStore.currentEvent.event.extendedProps.date_modified
+      if (dateModified.value) {
+        dateModified.value = moment(dateModified.value).format('YYYY-MM-DD hh:mm')
+      }
+
       // campos adicionales 
       amount.value = calendarStore.currentEvent.event.extendedProps.amount
       invoice_number.value = calendarStore.currentEvent.event.extendedProps.invoice_number
@@ -387,20 +395,22 @@ watch(() => selectedSlot.value.modal, () => {
   <teleport to="body">
     <div class="modal-wrapper" v-if="modal || selectedSlot.modal">
       <BCard header="Calendar Modal" header-tag="header" class="fc-modal text-center bg-white fs-5 p-0 min"
-        title="Add Event" style="min-width: 400px;">
+        title="Add Event" style="min-width: 1200px;">
         <BCardBody class="fs-6 pt-0">
           <div role="group" class="text-start">
-            <BCol cols="12" class="p-1">
-              <label for="title">Title:</label>
-              <BFormInput id="title" v-model="eventTitle" placeholder="Enter event title" :state="titleState" trim />
-              <BFormInvalidFeedback id="input-live-feedback"> Enter at least 3 letters </BFormInvalidFeedback>
-            </BCol>
-            <BCol cols="12" class="p-1">
-              <label for="title">Amount:</label>
-              <BFormInput id="title" v-model="amount" type="number" placeholder="Enter Amount" :state="amountState"
-                trim />
-              <BFormInvalidFeedback id="input-live-feedback"> Enter at least 0 </BFormInvalidFeedback>
-            </BCol>
+            <BRow cols="12" class="p-1">
+              <BCol cols="7" class="p-1">
+                <label for="title">Title:</label>
+                <BFormInput id="title" v-model="eventTitle" placeholder="Enter event title" :state="titleState" trim />
+                <BFormInvalidFeedback id="input-live-feedback"> Enter at least 3 letters </BFormInvalidFeedback>
+              </BCol>
+              <BCol cols="5" class="p-1">
+                <label for="title">Amount:</label>
+                <BFormInput id="title" v-model="amount" type="number" placeholder="Enter Amount" :state="amountState"
+                  trim />
+                <BFormInvalidFeedback id="input-live-feedback"> Enter at least 0 </BFormInvalidFeedback>
+              </BCol>
+            </BRow>
             <BCol cols="12" class="p-1">
               <label for="title">Invoice Number:</label>
               <BFormInput id="title" v-model="invoice_number" placeholder="Enter invoice number" trim />
@@ -409,82 +419,86 @@ watch(() => selectedSlot.value.modal, () => {
                 More Invoices
               </span>
             </BCol>
-            <BCol cols="12" class="p-1">
-              <label for="start">Start:</label>
-              <VueDatePicker aria-label="start" v-model="startDateTime" placeholder="Pick the start time" />
-            </BCol>
-            <BCol cols="12" class="p-1">
-              <label for="end">Until:</label>
-              <VueDatePicker aria-label="end" v-model="endDateTime" placeholder="Pick the End time" />
-            </BCol>
+            <BRow>
+              <BCol cols="6" class="p-1">
+                <label for="start">Start:</label>
+                <VueDatePicker aria-label="start" v-model="startDateTime" placeholder="Pick the start time" />
+              </BCol>
+              <BCol cols="6" class="p-1">
+                <label for="end">Until:</label>
+                <VueDatePicker aria-label="end" v-model="endDateTime" placeholder="Pick the End time" />
+              </BCol>
+            </BRow>
             <BCol cols="12" class="p-1">
               <BFormTextarea id="textarea" v-model="contentText" placeholder="Enter a description..." rows="3"
                 max-rows="6" />
             </BCol>
-            <BCol cols="12" class="p-1">
-              <label for="end">Status:</label>
-              <div id="color-picker">
-                <div class="wrapper-dropdown">
-                  <span @click="toggleStatus()" v-html="selectorStatus"></span>
-                  <ul class="dropdown" v-show="activeStatus">
-                    <li v-for="color in status" @click="setStatusColor(color.hex, color.name)">
-                      <span :style="{ background: color.hex }"></span> {{ color.name }}
-                    </li>
-                  </ul>
+            <BRow>
+              <BCol cols="4" class="p-1">
+                <label for="end">Status:</label>
+                <div id="color-picker">
+                  <div class="wrapper-dropdown">
+                    <span @click="toggleStatus()" v-html="selectorStatus"></span>
+                    <ul class="dropdown" v-show="activeStatus">
+                      <li v-for="color in status" @click="setStatusColor(color.hex, color.name)">
+                        <span :style="{ background: color.hex }"></span> {{ color.name }}
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </BCol>
-            <BCol cols="12" class="p-1">
-              <label for="end">Sub-Status:</label>
-              <div id="color-picker">
-                <div class="wrapper-dropdown">
-                  <span @click="toggleSubstatus()" v-html="selectorSubstatus"></span>
-                  <ul class="dropdown" v-show="activeSubstatus">
-                    <li v-for="color in substatus" @click="setSubstatusColor(color.hex, color.name)">
-                      <span :style="{ background: color.hex }"></span> {{ color.name }}
-                    </li>
-                  </ul>
+              </BCol>
+              <BCol cols="4" class="p-1">
+                <label for="end">Sub-Status:</label>
+                <div id="color-picker">
+                  <div class="wrapper-dropdown">
+                    <span @click="toggleSubstatus()" v-html="selectorSubstatus"></span>
+                    <ul class="dropdown" v-show="activeSubstatus">
+                      <li v-for="color in substatus" @click="setSubstatusColor(color.hex, color.name)">
+                        <span :style="{ background: color.hex }"></span> {{ color.name }}
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </BCol>
-            <BCol cols="12" class="p-1">
-              <input type="checkbox" id="accented-light" v-model="lodging" :checked="lodging">
-              <span>
-                Lodging
-              </span>
-              <input type="checkbox" id="accented-light" v-model="transportation" :checked="transportation">
-              <span>
-                Transportation
-              </span>
-              <input type="checkbox" id="accented-light" v-model="none"
-                :checked="!lodging && !transportation ? true : false">
-              <span>
-                None
-              </span>
-            </BCol>
+              </BCol>
+              <BCol cols="4" class="p-5">
+                <input type="checkbox" id="accented-light" v-model="lodging" :checked="lodging">
+                <span>
+                  Lodging
+                </span>
+                <input type="checkbox" id="accented-light" v-model="transportation" :checked="transportation">
+                <span>
+                  Transportation
+                </span>
+                <input type="checkbox" id="accented-light" v-model="none"
+                  :checked="!lodging && !transportation ? true : false">
+                <span>
+                  None
+                </span>
+              </BCol>
+            </BRow>
             <BCol cols="12" class="p-1" v-if="!selectedSlot.add">
               <label for="end">Link to deal:</label>
-              <a target="_blank"
+              <a target="_blank" v-if="currentEvent.event.extendedProps.deal_id"
                 :href="'https://btx.dds.miami/crm/deal/details/' + currentEvent.event.extendedProps.deal_id + '/'">
                 Click Here
               </a>
             </BCol>
-            <div>
-              <BCol cols="12" class="p-1">
+            <BRow>
+              <BCol cols="6" class="p-1">
                 <label for="end">User created: {{ userCreated }}</label>
               </BCol>
-              <BCol cols="12" class="p-1">
-                <label for="end">Date created: {{ dateCreated }}</label>
+              <BCol cols="6" class="p-1">
+                <label for="end">Date created: {{ moment(dateCreated).format('YYYY-MM-DD hh:mm') }}</label>
               </BCol>
-              <BCol cols="12" class="p-1">
+              <BCol cols="6" class="p-1">
                 <label for="end">User Modified: {{ userModified }}</label>
               </BCol>
-              <BCol cols="12" class="p-1">
-                <label for="end">Date Modified: {{ dateModified }} </label>
+              <BCol cols="6" class="p-1">
+                <label for="end">Date Modified: {{ }} </label>
               </BCol>
-              <div style="color: red;">
-                {{ error }}
-              </div>
+            </BRow>
+            <div style="color: red;">
+              {{ error }}
             </div>
           </div>
         </BCardBody>
