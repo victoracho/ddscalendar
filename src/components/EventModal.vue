@@ -261,6 +261,7 @@ watch(() => selectedSlot.value.modal, () => {
       if (dateCreated.value) {
         dateCreated.value = moment(dateCreated.value).format('YYYY-MM-DD hh:mm')
       }
+
       dateModified.value = calendarStore.currentEvent.event.extendedProps.date_modified
       if (dateModified.value) {
         dateModified.value = moment(dateModified.value).format('YYYY-MM-DD hh:mm')
