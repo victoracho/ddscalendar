@@ -101,24 +101,24 @@ export const useCalendarStore = defineStore('calendar', () => {
   ) => {
     console.log(value)
     switch (type) {
-      case 'add':
-        const add = axios.post('https://daso.dasoddscolor.com/sendEvent.php',
-          {
-            event: value,
-            user: currentUser.value,
-            deal_id: deal_id.value,
-          },
-          {
-            headers: { 'Content-Type': 'application/json' },
-          })
-          .then(function(response) {
-            alert(response.data.message)
-            getCalendarApi.value && getCalendarApi.value.refetchEvents()
-          })
-          .catch(() => {
-            alert('an error ocurred')
-          })
-        break
+      // case 'add':
+      //   const add = axios.post('https://daso.dasoddscolor.com/sendEvent.php',
+      //     {
+      //       event: value,
+      //       user: currentUser.value,
+      //       deal_id: deal_id.value,
+      //     },
+      //     {
+      //       headers: { 'Content-Type': 'application/json' },
+      //     })
+      //     .then(function(response) {
+      //       alert(response.data.message)
+      //       getCalendarApi.value && getCalendarApi.value.refetchEvents()
+      //     })
+      //     .catch(() => {
+      //       alert('an error ocurred')
+      //     })
+      //   break
       case 'edit':
         const edit = axios.post('https://daso.dasoddscolor.com/editEvent.php',
           {

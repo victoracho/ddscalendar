@@ -394,7 +394,7 @@ watch(() => selectedSlot.value.modal, () => {
   <teleport to="body">
     <div class="modal-wrapper" v-if="modal || selectedSlot.modal">
       <BCard header="Calendar Modal" header-tag="header" class="fc-modal text-center bg-white fs-5 p-0 min"
-        title="Add Event" style="min-width: 400px;">
+        title="Add Event" style="min-width: 600px;">
         <BCardBody class="fs-6 pt-0">
           <div role="group" class="text-start">
             <BCol cols="12" class="p-1">
@@ -417,12 +417,16 @@ watch(() => selectedSlot.value.modal, () => {
               </span>
             </BCol>
             <BCol cols="12" class="p-1">
-              <label for="start">Start:</label>
-              <VueDatePicker aria-label="start" v-model="startDateTime" placeholder="Pick the start time" />
-            </BCol>
-            <BCol cols="12" class="p-1">
-              <label for="end">Until:</label>
-              <VueDatePicker aria-label="end" v-model="endDateTime" placeholder="Pick the End time" />
+              <BCol cols="6" class="p-1">
+                <label for="start">Start:</label>
+                <VueDatePicker aria-label="start" timezone="America/New_York" v-model="startDateTime"
+                  placeholder="Pick the start time" />
+              </BCol>
+              <BCol cols="6" class="p-1">
+                <label for="end">Until:</label>
+                <VueDatePicker aria-label="end" timezone="America/New_York" v-model="endDateTime"
+                  placeholder="Pick the End time" />
+              </BCol>
             </BCol>
             <BCol cols="12" class="p-1">
               <BFormTextarea id="textarea" v-model="contentText" placeholder="Enter a description..." rows="3"
