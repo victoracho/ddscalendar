@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 import { useRouter } from 'vue-router'
+import moment from "moment";
 
 import SideNav from "./components/SideNav.vue";
 import { ref, reactive, watch, computed, defineProps, onMounted } from "vue";
@@ -26,6 +27,11 @@ const setSubstatusColor = (color, colorName) => {
 }
 const selectorSubstatus = computed(() => (!calendarStore.colorSubstatus ? 'Select a Substatus' : '<span style="background: ' + calendarStore.selectedSubstatus + '"></span> ' + calendarStore.colorSubstatus))
 const dateClicked = (date: string) => {
+  if (typeof date == 'object') {
+    const fechaEnd = moment(date, "ddd MMM DD YYYY HH:mm:ss")
+    const formatoOriginalEnd = fechaEnd.format("YYYY-MM-DDTHH:mm:ss")
+    date = formatoOriginalEnd
+  }
   calendarStore.getCalendarApi && calendarStore.getCalendarApi.gotoDate(date)
 }
 const router = useRouter()

@@ -2,6 +2,7 @@ import { ref, reactive, computed, inject } from 'vue'
 import { createPinia, defineStore } from 'pinia'
 import type { CustomEvent, SelectedSlot } from '@/interfaces'
 import axios from 'axios'
+import moment from "moment";
 
 export const pinia = createPinia()
 export const useCalendarStore = defineStore('calendar', () => {
@@ -101,7 +102,17 @@ export const useCalendarStore = defineStore('calendar', () => {
     console.log(value)
     switch (type) {
       case 'add':
-        const add = axios.post('https://dental.dasoddscolor.com/sendEvent.php',
+        if(typeof value.start == 'object'){
+          const fecha = moment(value.start, "ddd MMM DD YYYY HH:mm:ss")
+          const formatoOriginal = fecha.format("YYYY-MM-DDTHH:mm:ss") 
+          value.start = formatoOriginal
+        }
+        if(typeof value.end== 'object'){
+          const fechaEnd = moment(value.end, "ddd MMM DD YYYY HH:mm:ss")
+          const formatoOriginalEnd = fechaEnd.format("YYYY-MM-DDTHH:mm:ss") 
+          value.end= formatoOriginalEnd
+        }
+        const add = axios.post('http://localhost/dds/sendEvent.php',
           {
             event: value,
             user: currentUser.value,
@@ -119,6 +130,16 @@ export const useCalendarStore = defineStore('calendar', () => {
           })
         break
       case 'edit':
+        if(typeof value.start == 'object'){
+          const fecha = moment(value.start, "ddd MMM DD YYYY HH:mm:ss")
+          const formatoOriginal = fecha.format("YYYY-MM-DDTHH:mm:ss") 
+          value.start = formatoOriginal
+        }
+        if(typeof value.end== 'object'){
+          const fechaEnd = moment(value.end, "ddd MMM DD YYYY HH:mm:ss")
+          const formatoOriginalEnd = fechaEnd.format("YYYY-MM-DDTHH:mm:ss") 
+          value.end= formatoOriginalEnd
+        }
         const edit = axios.post('https://dental.dasoddscolor.com/editEvent.php',
           {
             event: value,

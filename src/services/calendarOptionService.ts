@@ -33,7 +33,7 @@ export const calendarOptions: F.CalendarOptions = {
   themeSystem: 'bootstrap5',
   initialView: 'timeGridDay',
   height: "100%",
-  timeZone: 'America/New_York',
+  timeZone: false,
   //locales: allLocales,
   //locale: enLocale, // 'fr'
   nowIndicator: true,
