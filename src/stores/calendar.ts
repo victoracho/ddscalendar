@@ -112,7 +112,7 @@ export const useCalendarStore = defineStore('calendar', () => {
           const formatoOriginalEnd = fechaEnd.format("YYYY-MM-DDTHH:mm:ss") 
           value.end= formatoOriginalEnd
         }
-        const add = axios.post('http://localhost/dds/sendEvent.php',
+        const add = axios.post('https://dental.dasoddscolor.com/sendEvent.php',
           {
             event: value,
             user: currentUser.value,
