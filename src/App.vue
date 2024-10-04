@@ -14,7 +14,8 @@ const calendarStore = useCalendarStore()
 const { status, currentDeal, quantity, deal } = storeToRefs(calendarStore)
 const activeSubstatus = ref(false)
 const activeDoctor = ref(false)
-const { selectedSubstatus } = storeToRefs(calendarStore)
+const activeSalon = ref(false)
+const { selectedSubstatus, selectedDoctorName, selectedSalon } = storeToRefs(calendarStore)
 const props = defineProps(['user', 'deal'])
 
 const toggleSubstatus = () => {
@@ -22,6 +23,9 @@ const toggleSubstatus = () => {
 }
 const toggleDoctor = () => {
   activeDoctor.value = true
+}
+const toggleSalon = () => {
+  activeSalon.value = true
 }
 
 const setSubstatusColor = (color, colorName) => {
@@ -35,8 +39,14 @@ const setDoctor = (id, name) => {
   activeDoctor.value = false
 }
 
+const setSalon = (name) => {
+  calendarStore.selectedSalon = name
+  activeSalon.value = false
+}
+
 const selectorSubstatus = computed(() => (!calendarStore.colorSubstatus ? 'Select a Substatus' : '<span style="background: ' + calendarStore.selectedSubstatus + '"></span> ' + calendarStore.colorSubstatus))
 const selectorDoctor = computed(() => (!calendarStore.selectedDoctorName ? 'Select a Doctor' : '<span></span> ' + calendarStore.selectedDoctorName))
+const selectorSalon = computed(() => (!calendarStore.selectedSalon ? 'Select a Salon' : '<span></span> ' + calendarStore.selectedSalon))
 
 const dateClicked = (date: string) => {
   calendarStore.getCalendarApi && calendarStore.getCalendarApi.gotoDate(date)
@@ -96,19 +106,16 @@ calendarStore.status.items =
     },
   ]
 
-calendarStore.salons.items =
-  [
-    {
-      checked: true,
-      name: 'salon 1'
-    },
-    {
-      checked: true,
-      name: 'salon 2'
-    },
-  ]
 
 watch(calendarStore.status, () => {
+  calendarStore.getCalendarApi.refetchEvents()
+})
+
+watch(selectedSalon, () => {
+  calendarStore.getCalendarApi.refetchEvents()
+})
+
+watch(selectedDoctorName, () => {
   calendarStore.getCalendarApi.refetchEvents()
 })
 
@@ -120,6 +127,18 @@ onMounted(() => {
   router.push('/')
   checkEvent()
   getDoctors()
+  calendarStore.salons =
+    [
+      {
+        name: 'All Salons'
+      },
+      {
+        name: 'salon 1'
+      },
+      {
+        name: 'salon 2'
+      },
+    ]
 })
 </script>
 <template>
@@ -151,6 +170,19 @@ onMounted(() => {
             <ul class="dropdown" v-show="activeDoctor">
               <li v-for="doctor in calendarStore.doctors" @click="setDoctor(doctor.id, doctor.name)">
                 {{ doctor.name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </BCol>
+      <br>
+      <BCol cols="12">
+        <div id="color-picker">
+          <div class="wrapper-dropdown">
+            <span @click="toggleSalon()" v-html="selectorSalon"></span>
+            <ul class="dropdown" v-show="activeSalon">
+              <li v-for="salon in calendarStore.salons" @click="setSalon(salon.name)">
+                {{ salon.name }}
               </li>
             </ul>
           </div>

@@ -17,12 +17,11 @@ export const fetchEvent = async ({
 }: {
   range: string[]
 }) => {
-  console.log(range)
   const calendarStore = useCalendarStore()
-  const { selectedSubstatus, colorSubstatus, selectedDoctor, selectedSalon } = storeToRefs(calendarStore)
+  const { colorSubstatus, selectedDoctorId, selectedSalon } = storeToRefs(calendarStore)
   const checked = calendarStore.status.items.filter((x) => x.checked).map((x) => x.name).join("', '")
   const substatus = colorSubstatus.value
-  const doctor = selectedDoctor.value
+  const doctor = selectedDoctorId.value
   const salon = selectedSalon.value
   const eventsForYear = await getData(axios.defaults.baseURL + "appointments.php?range=" + range + "&status=" + checked + "&substatus=" + substatus + '&doctor=' + doctor + '&salon=' + salon)
   return eventsForYear

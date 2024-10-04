@@ -15,11 +15,13 @@ export const useCalendarStore = defineStore('calendar', () => {
   const currentUser = ref(null)
   const currStatus = ref(null)
   const currSubstatus = ref(null)
+
   const selectedSubstatus = ref('')
-  const selectedDoctorName = ref('All Doctors')
-  const selectedDoctorId = ref(null)
   const selectedSalon = ref('All Salons')
+  const selectedDoctorId = ref('All Doctors')
+  const selectedDoctorName = ref('All Doctors')
   const colorSubstatus = ref('All Substatus')
+
   const modal = ref(false)
   const refetch = ref(false)
   const doctors = ref()
