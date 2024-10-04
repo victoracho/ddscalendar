@@ -7,6 +7,8 @@ import 'floating-vue/dist/style.css' //The css file to use the floating-vue comp
 import '@vuepic/vue-datepicker/dist/main.css'
 
 import { createApp } from 'vue'
+import axios from 'axios'
+
 import { createBootstrap } from 'bootstrap-vue-next'
 import FloatingVue from 'floating-vue'
 import VuedatePicker from '@vuepic/vue-datepicker'
@@ -21,6 +23,8 @@ import router from './router'
 
 const app = createApp(App)
 
+axios.defaults.baseURL = 'http://localhost/dds/'
+
 FloatingVue.options.distance = 2
 
 app.use(pinia)
@@ -30,6 +34,7 @@ app.config.globalProperties.$filters = {
   },
 }
 app.use(router)
+app.use(axios)
 app.use(createBootstrap())
 app.use(FloatingVue)
 app.provide('user', user)

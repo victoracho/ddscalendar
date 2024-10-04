@@ -16,9 +16,14 @@ export const useCalendarStore = defineStore('calendar', () => {
   const currStatus = ref(null)
   const currSubstatus = ref(null)
   const selectedSubstatus = ref('')
+  const selectedDoctorName = ref('All Doctors')
+  const selectedDoctorId = ref(null)
+  const selectedSalon = ref('All Salons')
   const colorSubstatus = ref('All Substatus')
   const modal = ref(false)
   const refetch = ref(false)
+  const doctors = ref()
+  const salons = ref([])
   const addedEvents = ref<CustomEvent[]>([])
   const selectedSlot = ref<SelectedSlot>({
     add: true,
@@ -51,32 +56,16 @@ export const useCalendarStore = defineStore('calendar', () => {
         name: 'All Substatus'
       },
       {
-        hex: '#00759A',
-        name: 'Confirmed'
+        hex: '#15870b',
+        name: 'Simple'
       },
       {
-        hex: '#f09707',
-        name: 'Unconfirmed'
+        hex: '#f0e351',
+        name: 'Combo Simple'
       },
       {
-        hex: '#41f007',
-        name: 'LM + TM'
-      },
-      {
-        hex: '#808080',
-        name: 'N/A'
-      },
-      {
-        hex: '#8c2800',
-        name: 'Phone Disconnected'
-      },
-      {
-        hex: '#d9a4e0',
-        name: 'No phone / email'
-      },
-      {
-        hex: '#F0F0F0',
-        name: 'Not Specified'
+        hex: '#d4021e',
+        name: 'Combo Plus'
       },
     ],
   )
@@ -101,26 +90,47 @@ export const useCalendarStore = defineStore('calendar', () => {
   ) => {
     console.log(value)
     switch (type) {
-      // case 'add':
-      //   const add = axios.post('https://daso.dasoddscolor.com/sendEvent.php',
-      //     {
-      //       event: value,
-      //       user: currentUser.value,
-      //       deal_id: deal_id.value,
-      //     },
-      //     {
-      //       headers: { 'Content-Type': 'application/json' },
-      //     })
-      //     .then(function(response) {
-      //       alert(response.data.message)
-      //       getCalendarApi.value && getCalendarApi.value.refetchEvents()
-      //     })
-      //     .catch(() => {
-      //       alert('an error ocurred')
-      //     })
-      //   break
+      case 'add':
+        if (typeof value.start == 'object') {
+          const fecha = moment(value.start, "ddd MMM DD YYYY HH:mm:ss")
+          const formatoOriginal = fecha.format("YYYY-MM-DDTHH:mm:ss")
+          value.start = formatoOriginal
+        }
+        if (typeof value.end == 'object') {
+          const fechaEnd = moment(value.end, "ddd MMM DD YYYY HH:mm:ss")
+          const formatoOriginalEnd = fechaEnd.format("YYYY-MM-DDTHH:mm:ss")
+          value.end = formatoOriginalEnd
+        }
+        const add = axios.post(axios.defaults.baseURL + 'dds/sendEvent.php',
+          {
+            event: value,
+            user: currentUser.value,
+            deal_id: deal_id.value,
+          },
+          {
+            headers: { 'Content-Type': 'application/json' },
+          })
+          .then(function(response) {
+            alert(response.data.message)
+            getCalendarApi.value && getCalendarApi.value.refetchEvents()
+          })
+          .catch(() => {
+            alert('an error ocurred')
+          })
+        break
       case 'edit':
-        const edit = axios.post('https://daso.dasoddscolor.com/editEvent.php',
+        if (typeof value.start == 'object') {
+          const fecha = moment(value.start, "ddd MMM DD YYYY HH:mm:ss")
+          const formatoOriginal = fecha.format("YYYY-MM-DDTHH:mm:ss")
+          value.start = formatoOriginal
+        }
+        if (typeof value.end == 'object') {
+          const fechaEnd = moment(value.end, "ddd MMM DD YYYY HH:mm:ss")
+          const formatoOriginalEnd = fechaEnd.format("YYYY-MM-DDTHH:mm:ss")
+          value.end = formatoOriginalEnd
+        }
+
+        const edit = axios.post(axios.defaults.baseURL + '/editEvent.php',
           {
             event: value,
             user: currentUser.value,
@@ -160,10 +170,15 @@ export const useCalendarStore = defineStore('calendar', () => {
     deal,
     deal_id,
     deal_name,
+    doctors,
+    salons,
     currentUser,
     currStatus,
     currSubstatus,
     selectedSubstatus,
+    selectedDoctorName,
+    selectedDoctorId,
+    selectedSalon,
     colorSubstatus,
     currentEvent,
     setCurrentEvent,

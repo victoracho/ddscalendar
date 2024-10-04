@@ -61,35 +61,20 @@ const status = ref(
     },
   ],
 )
+
 const substatus = ref(
   [
     {
-      hex: '#00759A',
-      name: 'Confirmed'
+      hex: '#15870b',
+      name: 'Simple'
     },
     {
-      hex: '#f09707',
-      name: 'Unconfirmed'
+      hex: '#f0e351',
+      name: 'Combo Simple'
     },
     {
-      hex: '#41f007',
-      name: 'LM + TM'
-    },
-    {
-      hex: '#808080',
-      name: 'N/A'
-    },
-    {
-      hex: '#8c2800',
-      name: 'Phone Disconnected'
-    },
-    {
-      hex: '#d9a4e0',
-      name: 'No phone / email'
-    },
-    {
-      hex: '#F0F0F0',
-      name: 'Not Specified'
+      hex: '#d4021e',
+      name: 'Combo Plus'
     },
   ],
 )

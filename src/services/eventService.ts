@@ -19,11 +19,24 @@ export const fetchEvent = async ({
   range: string[]
 }) => {
   const calendarStore = useCalendarStore()
-  const { selectedSubstatus, colorSubstatus } = storeToRefs(calendarStore)
+  const { selectedSubstatus, colorSubstatus, selectedDoctor, selectedSalon } = storeToRefs(calendarStore)
   const checked = calendarStore.status.items.filter((x) => x.checked).map((x) => x.name).join("', '")
-  let substatus = colorSubstatus.value
-  const eventsForYear = await getData("https://daso.dasoddscolor.com/appointments.php?range=" + range + "&status=" + checked + "&substatus=" + substatus)
+  const substatus = colorSubstatus.value
+  const doctor = selectedDoctor.value
+  const salon = selectedSalon.value
+  const eventsForYear = await getData(axios.defaults.baseURL + "appointments.php?range=" + range + "&status=" + checked + "&substatus=" + substatus + '&doctor=' + doctor + '&salon=' + salon)
   return eventsForYear
+}
+
+export const getDoctors = async () => {
+  const calendarStore = useCalendarStore()
+  const { doctors } = storeToRefs(calendarStore)
+  const response = await axios.get(axios.defaults.baseURL + "getDoctors.php")
+  const data = response.data
+  if (data.message == 'success') {
+    calendarStore.doctors = data.results
+    console.log(data.results)
+  }
 }
 
 export const checkEvent = async (deal) => {
@@ -34,7 +47,7 @@ export const checkEvent = async (deal) => {
   calendarStore.currentUser = user
   calendarStore.deal_id = deal_id
   calendarStore.deal_name = deal_name
-  const response = await axios.get('https://daso.dasoddscolor.com/verifyAppt.php?deal_id=' + deal_id)
+  const response = await axios.get(axios.defaults.baseURL + 'verifyAppt.php?deal_id=' + deal_id)
   const data = response.data
   if (data.message == 'found') {
     calendarStore.currentDeal = data.result

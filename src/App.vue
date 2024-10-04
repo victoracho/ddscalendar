@@ -7,24 +7,37 @@ import { ref, reactive, watch, computed, defineProps, onMounted } from "vue";
 import { useCalendarStore } from "./stores/calendar";
 import { storeToRefs } from 'pinia'
 import axios from 'axios'
-import { checkEvent } from './services/eventService'
+import { checkEvent, getDoctors } from './services/eventService'
 
 const date = ref(new Date())
 const calendarStore = useCalendarStore()
 const { status, currentDeal, quantity, deal } = storeToRefs(calendarStore)
 const activeSubstatus = ref(false)
+const activeDoctor = ref(false)
 const { selectedSubstatus } = storeToRefs(calendarStore)
 const props = defineProps(['user', 'deal'])
 
 const toggleSubstatus = () => {
   activeSubstatus.value = true
 }
+const toggleDoctor = () => {
+  activeDoctor.value = true
+}
+
 const setSubstatusColor = (color, colorName) => {
   calendarStore.selectedSubstatus = color
   calendarStore.colorSubstatus = colorName
   activeSubstatus.value = false
 }
+const setDoctor = (id, name) => {
+  calendarStore.selectedDoctorName = name
+  calendarStore.selectedDoctorId = id
+  activeDoctor.value = false
+}
+
 const selectorSubstatus = computed(() => (!calendarStore.colorSubstatus ? 'Select a Substatus' : '<span style="background: ' + calendarStore.selectedSubstatus + '"></span> ' + calendarStore.colorSubstatus))
+const selectorDoctor = computed(() => (!calendarStore.selectedDoctorName ? 'Select a Doctor' : '<span></span> ' + calendarStore.selectedDoctorName))
+
 const dateClicked = (date: string) => {
   calendarStore.getCalendarApi && calendarStore.getCalendarApi.gotoDate(date)
 }
@@ -83,6 +96,18 @@ calendarStore.status.items =
     },
   ]
 
+calendarStore.salons.items =
+  [
+    {
+      checked: true,
+      name: 'salon 1'
+    },
+    {
+      checked: true,
+      name: 'salon 2'
+    },
+  ]
+
 watch(calendarStore.status, () => {
   calendarStore.getCalendarApi.refetchEvents()
 })
@@ -94,6 +119,7 @@ onMounted(() => {
   // Aquí puedes usar la API de Bitrix24 si es necesario
   router.push('/')
   checkEvent()
+  getDoctors()
 })
 </script>
 <template>
@@ -112,6 +138,19 @@ onMounted(() => {
             <ul class="dropdown" v-show="activeSubstatus">
               <li v-for="color in calendarStore.substatus" @click="setSubstatusColor(color.hex, color.name)">
                 <span :style="{ background: color.hex }"></span> {{ color.name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </BCol>
+      <br>
+      <BCol cols="12">
+        <div id="color-picker">
+          <div class="wrapper-dropdown">
+            <span @click="toggleDoctor()" v-html="selectorDoctor"></span>
+            <ul class="dropdown" v-show="activeDoctor">
+              <li v-for="doctor in calendarStore.doctors" @click="setDoctor(doctor.id, doctor.name)">
+                {{ doctor.name }}
               </li>
             </ul>
           </div>
