@@ -1,4 +1,3 @@
-import moment from "moment"
 import axios from 'axios'
 import type { FullCalendar as F } from '@/interfaces'
 import { useCalendarStore } from "../stores/calendar";
@@ -31,12 +30,10 @@ export const fetchEvent = async ({
 
 export const getDoctors = async () => {
   const calendarStore = useCalendarStore()
-  const { doctors } = storeToRefs(calendarStore)
   const response = await axios.get(axios.defaults.baseURL + "getDoctors.php")
   const data = response.data
   if (data.message == 'success') {
     calendarStore.doctors = data.results
-    console.log(data.results)
   }
 }
 
