@@ -18,6 +18,7 @@ export const fetchEvent = async ({
 }: {
   range: string[]
 }) => {
+  console.log(range)
   const calendarStore = useCalendarStore()
   const { selectedSubstatus, colorSubstatus, selectedDoctor, selectedSalon } = storeToRefs(calendarStore)
   const checked = calendarStore.status.items.filter((x) => x.checked).map((x) => x.name).join("', '")

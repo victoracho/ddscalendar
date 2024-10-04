@@ -34,7 +34,6 @@ app.config.globalProperties.$filters = {
   },
 }
 app.use(router)
-app.use(axios)
 app.use(createBootstrap())
 app.use(FloatingVue)
 app.provide('user', user)
