@@ -126,7 +126,7 @@ onMounted(() => {
   // Aquí puedes usar la API de Bitrix24 si es necesario
   router.push('/')
   checkEvent()
-  getDoctors()
+  calendarStore.doctors = getDoctors()
   calendarStore.salons =
     [
       {

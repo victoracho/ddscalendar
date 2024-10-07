@@ -2,6 +2,7 @@ import { ref, reactive, computed, inject } from 'vue'
 import { createPinia, defineStore } from 'pinia'
 import type { CustomEvent, SelectedSlot } from '@/interfaces'
 import axios from 'axios'
+import moment from "moment";
 
 export const pinia = createPinia()
 export const useCalendarStore = defineStore('calendar', () => {
@@ -15,6 +16,8 @@ export const useCalendarStore = defineStore('calendar', () => {
   const currentUser = ref(null)
   const currStatus = ref(null)
   const currSubstatus = ref(null)
+  const currSalon = ref(null)
+  const currDoctor = ref(null)
 
   const selectedSubstatus = ref('')
   const selectedSalon = ref('All Salons')
@@ -90,7 +93,6 @@ export const useCalendarStore = defineStore('calendar', () => {
     value: any,
     type: string
   ) => {
-    console.log(value)
     switch (type) {
       case 'add':
         if (typeof value.start == 'object') {
@@ -103,7 +105,8 @@ export const useCalendarStore = defineStore('calendar', () => {
           const formatoOriginalEnd = fechaEnd.format("YYYY-MM-DDTHH:mm:ss")
           value.end = formatoOriginalEnd
         }
-        const add = axios.post(axios.defaults.baseURL + 'dds/sendEvent.php',
+        console.log(value)
+        const add = axios.post(axios.defaults.baseURL + '/sendEvent.php',
           {
             event: value,
             user: currentUser.value,
@@ -131,7 +134,6 @@ export const useCalendarStore = defineStore('calendar', () => {
           const formatoOriginalEnd = fechaEnd.format("YYYY-MM-DDTHH:mm:ss")
           value.end = formatoOriginalEnd
         }
-
         const edit = axios.post(axios.defaults.baseURL + '/editEvent.php',
           {
             event: value,
@@ -177,6 +179,8 @@ export const useCalendarStore = defineStore('calendar', () => {
     currentUser,
     currStatus,
     currSubstatus,
+    currSalon,
+    currDoctor,
     selectedSubstatus,
     selectedDoctorName,
     selectedDoctorId,

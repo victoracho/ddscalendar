@@ -2,96 +2,122 @@
 import { storeToRefs } from 'pinia';
 import { addHours, format } from "date-fns";
 import moment from "moment";
+import axios from 'axios'
+
 import { useCalendarStore } from '@/stores/calendar';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 const calendarStore = useCalendarStore()
-const { modal, selectedSlot, currStatus, currSubstatus, currentDeal, deal, currentEvent } = storeToRefs(calendarStore)
-const { setModal, setAddedEvents, setSelectedSlot } = calendarStore
+const { modal, selectedSlot, currStatus, currSubstatus, currentDeal, deal, currentEvent, currSalon, currDoctor, doctors, salons } = storeToRefs(calendarStore)
+const { setModal, setAddedEvents, setSelectedSlot, getDoctors } = calendarStore
 const eventTitle = ref('')
+
 const activeStatus = ref(false)
 const activeSubstatus = ref(false)
-//  more fields 
-const amount = ref(null)
-const invoice_number = ref('')
-const more_invoices = ref(false)
-const transportation = ref(false)
-const lodging = ref(false)
+const activeSalon = ref(false)
+const activeDoctor = ref(false)
 
-const status = ref(
-  [
-    {
-      hex: '#00afc7',
-      name: 'Evaluation'
-    },
-    {
-      hex: '#10e5fc',
-      name: 'Follow up'
-    },
-    {
-      hex: '#bd7ac9',
-      name: 'Hyperbaric Chamber'
-    },
-    {
-      hex: '#e89b06',
-      name: 'Labs'
-    },
-    {
-      hex: '#e97090',
-      name: 'Massage'
-    },
-    {
-      hex: '#00ff00',
-      name: 'Post-op'
-    },
-    {
-      hex: '#fff300',
-      name: 'Pre-op appt'
-    },
-    {
-      hex: '#b57051',
-      name: 'Pre-op Surgery'
-    },
-    {
-      hex: '#86b100',
-      name: 'Surgery'
-    },
-    {
-      hex: '#7b03fc',
-      name: 'Missing-appointment'
-    },
-  ],
-)
+const status = ref(null)
+const substatus = ref(null)
+const eventSalons = ref(null)
+const eventDoctors = ref(null)
 
-const substatus = ref(
-  [
+onMounted(async () => {
+  const response = await axios.get(axios.defaults.baseURL + "getDoctors.php")
+  const data = response.data
+  if (data.message == 'success') {
+    eventDoctors.value = data.results
+    eventDoctors.value.shift()
+  }
+
+  status.value =
+    [
+      {
+        hex: '#00afc7',
+        name: 'Evaluation'
+      },
+      {
+        hex: '#10e5fc',
+        name: 'Follow up'
+      },
+      {
+        hex: '#bd7ac9',
+        name: 'Hyperbaric Chamber'
+      },
+      {
+        hex: '#e89b06',
+        name: 'Labs'
+      },
+      {
+        hex: '#e97090',
+        name: 'Massage'
+      },
+      {
+        hex: '#00ff00',
+        name: 'Post-op'
+      },
+      {
+        hex: '#fff300',
+        name: 'Pre-op appt'
+      },
+      {
+        hex: '#b57051',
+        name: 'Pre-op Surgery'
+      },
+      {
+        hex: '#86b100',
+        name: 'Surgery'
+      },
+      {
+        hex: '#7b03fc',
+        name: 'Missing-appointment'
+      },
+    ]
+
+  substatus.value =
+    [
+      {
+        hex: '#15870b',
+        name: 'Simple'
+      },
+      {
+        hex: '#f0e351',
+        name: 'Combo Simple'
+      },
+      {
+        hex: '#d4021e',
+        name: 'Combo Plus'
+      },
+    ]
+  eventSalons.value = [
     {
-      hex: '#15870b',
-      name: 'Simple'
+      name: 'salon 1'
     },
     {
-      hex: '#f0e351',
-      name: 'Combo Simple'
+      name: 'salon 2'
     },
-    {
-      hex: '#d4021e',
-      name: 'Combo Plus'
-    },
-  ],
-)
+  ]
+
+})
+
+
+
 
 const startDateTime = ref<string | Date | null>(new Date())
 const endDateTime = ref<string | Date | null>(addHours(new Date(), 1))
 const contentText = ref('')
 const selectedSubStatus = ref('')
 const selectedStatus = ref('')
+const selectedSalon = ref('')
+const selectedDoctor = ref('')
 const colorSubstatus = ref('')
 const colorStatus = ref('')
 const error = ref(null)
 const none = ref(null)
 const titleState = computed(() => (eventTitle.value?.length > 2 ? true : false))
-const amountState = computed(() => (amount.value?.length > 0 ? true : false))
 const selectorSubstatus = computed(() => (!selectedSubStatus.value ? 'Select a Substatus' : '<span style="background: ' + selectedSubStatus.value + '"></span> ' + colorSubstatus.value))
 const selectorStatus = computed(() => (!selectedStatus.value ? 'Select a Status' : '<span style="background: ' + selectedStatus.value + '"></span> ' + colorStatus.value))
+const selectorSalon = computed(() => (!selectedSalon.value ? 'Select a salon' : '<span</span> ' + selectedSalon.value))
+const selectorDoctor = computed(() => (!selectedDoctor.value ? 'Select a  doctor' : '<span></span> ' + selectedDoctor.value))
 const userCreated = ref(null)
 const userModified = ref(null)
 const dateCreated = ref(null)
@@ -102,11 +128,30 @@ const toggleSubstatus = () => {
 const toggleStatus = () => {
   activeStatus.value = true
 }
+const toggleSalon = () => {
+  activeSalon.value = true
+}
+const toggleDoctor = () => {
+  activeDoctor.value = true
+}
+
 const setSubstatusColor = (color, colorName) => {
   selectedSubStatus.value = color
   colorSubstatus.value = colorName
   activeSubstatus.value = false
   currSubstatus.value = colorName
+}
+
+const setSalon = (salon) => {
+  selectedSalon.value = salon
+  activeSalon.value = false
+  currSalon.value = salon
+}
+
+const setDoctor = (doctor, id) => {
+  selectedDoctor.value = doctor
+  currDoctor.value = id
+  activeDoctor.value = false
 }
 
 const setStatusColor = (color, colorName) => {
@@ -118,48 +163,57 @@ const setStatusColor = (color, colorName) => {
 
 const addEvent = () => {
   error.value = null;
-  if (!currSubstatus.value && !currStatus.value) {
-    error.value = 'you have to select an status and a substatus'
+  if (!currSubstatus.value) {
+    error.value = 'you have to select a substatus'
   }
-
-  if (!transportation.value && !lodging.value && !none.value) {
-    error.value = 'you have to select a tranportation option'
+  if (!currStatus.value) {
+    error.value = 'you have to select an status '
+  }
+  if (!currSalon.value) {
+    error.value = 'you have to select a salon'
+  }
+  if (!currDoctor.value) {
+    error.value = 'you have to select a doctor'
   }
 
   if (!error.value) {
     setAddedEvents({
       substatus: currSubstatus.value.toLowerCase(),
       BackgroundColor: currStatus.value.toLowerCase(),
+      salon: currSalon.value.toLowerCase(),
+      doctor: currDoctor.value,
       start: startDateTime.value,
       end: endDateTime.value,
       title: eventTitle.value,
       text: contentText.value,
-      amount: amount.value,
-      invoice_number: invoice_number.value,
-      transportation: transportation.value,
-      lodging: lodging.value,
-      more_invoices: more_invoices.value,
     }, 'add')
     closeModal()
   }
 }
 const editEvent = () => {
-  if (!currSubstatus.value && !currStatus.value) {
-    error.value = 'you have to select an status and a substatus'
+  error.value = null;
+  if (!currSubstatus.value) {
+    error.value = 'you have to select a substatus'
+  }
+  if (!currStatus.value) {
+    error.value = 'you have to select an status '
+  }
+  if (!currSalon.value) {
+    error.value = 'you have to select a salon'
+  }
+  if (!currDoctor.value) {
+    error.value = 'you have to select a doctor'
   }
   if (currSubstatus.value && currStatus.value) {
     setAddedEvents({
       substatus: currSubstatus.value.toLowerCase(),
       BackgroundColor: currStatus.value.toLowerCase(),
+      salon: currSalon.value.toLowerCase(),
+      doctor: currDoctor.value,
       start: startDateTime.value,
       end: endDateTime.value,
       title: eventTitle.value,
       text: contentText.value,
-      amount: amount.value,
-      invoice_number: invoice_number.value,
-      transportation: transportation.value,
-      lodging: lodging.value,
-      more_invoices: more_invoices.value,
     }, 'edit')
     closeModal()
   }
@@ -198,24 +252,6 @@ const closeModal = () => {
   dateModified.value = null
 }
 
-watch(() => none.value, () => {
-  if (none.value == true) {
-    transportation.value = false
-    lodging.value = false
-  }
-})
-watch(() => lodging.value, () => {
-  if (lodging.value == true) {
-    if (none.value) {
-      none.value = false
-    }
-  }
-})
-watch(() => transportation.value, () => {
-  if (transportation.value == true) {
-    none.value = false
-  }
-})
 
 watch(() => selectedSlot.value.modal, () => {
   if (selectedSlot.value.modal) {
@@ -224,18 +260,18 @@ watch(() => selectedSlot.value.modal, () => {
       contentText.value = null
       selectedSubStatus.value = null
       selectedStatus.value = null
+      selectedDoctor.value = null
+      selectedSalon.value = null
       colorSubstatus.value = null
       colorStatus.value = null
       userCreated.value = null
       userModified.value = null
       dateCreated.value = null
       dateModified.value = null
+      currDoctor.value = null
+      currSalon.value = null
+
       // campos adicionales
-      amount.value = null
-      invoice_number.value = null
-      lodging.value = null
-      transportation.value = null
-      more_invoices.value = null
 
       startDateTime.value = selectedSlot.value.times.start
       endDateTime.value = selectedSlot.value.times.end
@@ -247,28 +283,11 @@ watch(() => selectedSlot.value.modal, () => {
       userModified.value = calendarStore.currentEvent.event.extendedProps.user_modified
       dateCreated.value = calendarStore.currentEvent.event.extendedProps.date_created
       dateModified.value = calendarStore.currentEvent.event.extendedProps.date_modified
+      setSalon(calendarStore.currentEvent.event.extendedProps.salon)
+      const element = eventDoctors.value.filter(elem => elem.id == calendarStore.currentEvent.event.extendedProps.doctor)
+      setDoctor(element[0].name, element[0].id)
+
       // campos adicionales 
-      amount.value = calendarStore.currentEvent.event.extendedProps.amount
-      invoice_number.value = calendarStore.currentEvent.event.extendedProps.invoice_number
-
-      lodging.value = false
-      if (calendarStore.currentEvent.event.extendedProps.lodging == '1') {
-        lodging.value = true
-      }
-
-      transportation.value = false
-      if (calendarStore.currentEvent.event.extendedProps.transportation == '1') {
-        transportation.value = true
-      }
-
-      more_invoices.value = false
-      if (calendarStore.currentEvent.event.extendedProps.more_invoices == '1') {
-        more_invoices.value = true
-      }
-      // si no tiene ninguna de las opciones   
-      if (!transportation.value && !lodging.value) {
-        none.value = true;
-      }
 
       let color = null
       let colorName = null
@@ -379,108 +398,107 @@ watch(() => selectedSlot.value.modal, () => {
   <teleport to="body">
     <div class="modal-wrapper" v-if="modal || selectedSlot.modal">
       <BCard header="Calendar Modal" header-tag="header" class="fc-modal text-center bg-white fs-5 p-0 min"
-        title="Add Event" style="min-width: 600px;">
+        title="Add Event" style="min-width: 1200px;">
         <BCardBody class="fs-6 pt-0">
           <div role="group" class="text-start">
-            <BCol cols="12" class="p-1">
-              <label for="title">Title:</label>
-              <BFormInput id="title" v-model="eventTitle" placeholder="Enter event title" :state="titleState" trim />
-              <BFormInvalidFeedback id="input-live-feedback"> Enter at least 3 letters </BFormInvalidFeedback>
-            </BCol>
-            <BCol cols="12" class="p-1">
-              <label for="title">Amount:</label>
-              <BFormInput id="title" v-model="amount" type="number" placeholder="Enter Amount" :state="amountState"
-                trim />
-              <BFormInvalidFeedback id="input-live-feedback"> Enter at least 0 </BFormInvalidFeedback>
-            </BCol>
-            <BCol cols="12" class="p-1">
-              <label for="title">Invoice Number:</label>
-              <BFormInput id="title" v-model="invoice_number" placeholder="Enter invoice number" trim />
-              <input type="checkbox" id="accented-light" v-model="more_invoices" :checked="more_invoices">
-              <span>
-                More Invoices
-              </span>
-            </BCol>
-            <BCol cols="12" class="p-1">
+            <BRow cols="12" class="p-1">
+              <BCol cols="7" class="p-1">
+                <label for="title">Title:</label>
+                <BFormInput id="title" v-model="eventTitle" placeholder="Enter event title" :state="titleState" trim />
+                <BFormInvalidFeedback id="input-live-feedback"> Enter at least 3 letters </BFormInvalidFeedback>
+              </BCol>
+            </BRow>
+            <BRow>
               <BCol cols="6" class="p-1">
                 <label for="start">Start:</label>
-                <VueDatePicker aria-label="start" timezone="America/New_York" v-model="startDateTime"
-                  placeholder="Pick the start time" />
+                <VueDatePicker aria-label="start" v-model="startDateTime" placeholder="Pick the start time" />
               </BCol>
               <BCol cols="6" class="p-1">
                 <label for="end">Until:</label>
-                <VueDatePicker aria-label="end" timezone="America/New_York" v-model="endDateTime"
-                  placeholder="Pick the End time" />
+                <VueDatePicker aria-label="end" v-model="endDateTime" placeholder="Pick the End time" />
               </BCol>
-            </BCol>
+            </BRow>
             <BCol cols="12" class="p-1">
               <BFormTextarea id="textarea" v-model="contentText" placeholder="Enter a description..." rows="3"
                 max-rows="6" />
             </BCol>
-            <BCol cols="12" class="p-1">
-              <label for="end">Status:</label>
-              <div id="color-picker">
-                <div class="wrapper-dropdown">
-                  <span @click="toggleStatus()" v-html="selectorStatus"></span>
-                  <ul class="dropdown" v-show="activeStatus">
-                    <li v-for="color in status" @click="setStatusColor(color.hex, color.name)">
-                      <span :style="{ background: color.hex }"></span> {{ color.name }}
-                    </li>
-                  </ul>
+            <BRow>
+              <BCol cols="3" class="p-1">
+                <label for="end">Status:</label>
+                <div id="color-picker">
+                  <div class="wrapper-dropdown">
+                    <span @click="toggleStatus()" v-html="selectorStatus"></span>
+                    <ul class="dropdown" v-show="activeStatus">
+                      <li v-for="color in status" @click="setStatusColor(color.hex, color.name)">
+                        <span :style="{ background: color.hex }"></span> {{ color.name }}
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </BCol>
-            <BCol cols="12" class="p-1">
-              <label for="end">Sub-Status:</label>
-              <div id="color-picker">
-                <div class="wrapper-dropdown">
-                  <span @click="toggleSubstatus()" v-html="selectorSubstatus"></span>
-                  <ul class="dropdown" v-show="activeSubstatus">
-                    <li v-for="color in substatus" @click="setSubstatusColor(color.hex, color.name)">
-                      <span :style="{ background: color.hex }"></span> {{ color.name }}
-                    </li>
-                  </ul>
+              </BCol>
+              <BCol cols="3" class="p-1">
+                <label for="end">Sub-Status:</label>
+                <div id="color-picker">
+                  <div class="wrapper-dropdown">
+                    <span @click="toggleSubstatus()" v-html="selectorSubstatus"></span>
+                    <ul class="dropdown" v-show="activeSubstatus">
+                      <li v-for="color in substatus" @click="setSubstatusColor(color.hex, color.name)">
+                        <span :style="{ background: color.hex }"></span> {{ color.name }}
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </BCol>
-            <BCol cols="12" class="p-1">
-              <input type="checkbox" id="accented-light" v-model="lodging" :checked="lodging">
-              <span>
-                Lodging
-              </span>
-              <input type="checkbox" id="accented-light" v-model="transportation" :checked="transportation">
-              <span>
-                Transportation
-              </span>
-              <input type="checkbox" id="accented-light" v-model="none"
-                :checked="!lodging && !transportation ? true : false">
-              <span>
-                None
-              </span>
-            </BCol>
+              </BCol>
+              <BCol cols="3" class="p-1">
+                <label for="end">Doctor:</label>
+                <div id="color-picker">
+                  <div class="wrapper-dropdown">
+                    <span @click="toggleDoctor()" v-html="selectorDoctor"></span>
+                    <ul class="dropdown" v-show="activeDoctor">
+                      <li v-for="doctor in eventDoctors" @click="setDoctor(doctor.name, doctor.id)">
+                        <span></span> {{ doctor.name }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </BCol>
+              <BCol cols="3" class="p-1">
+                <label for="end">Salon:</label>
+                <div id="color-picker">
+                  <div class="wrapper-dropdown">
+                    <span @click="toggleSalon()" v-html="selectorSalon"></span>
+                    <ul class="dropdown" v-show="activeSalon">
+                      <li v-for="salon in eventSalons" @click="setSalon(salon.name)">
+                        <span></span> {{ salon.name }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </BCol>
+            </BRow>
             <BCol cols="12" class="p-1" v-if="!selectedSlot.add">
               <label for="end">Link to deal:</label>
-              <a target="_blank"
-                :href="'https://daso.dds.miami/crm/deal/details/' + currentEvent.event.extendedProps.deal_id + '/'">
+              <a target="_blank" v-if="currentEvent.event.extendedProps.deal_id"
+                :href="'https://btx.dds.miami/crm/deal/details/' + currentEvent.event.extendedProps.deal_id + '/'">
                 Click Here
               </a>
             </BCol>
-            <div>
-              <BCol cols="12" class="p-1">
+            <BRow>
+              <BCol cols="6" class="p-1">
                 <label for="end">User created: {{ userCreated }}</label>
               </BCol>
-              <BCol cols="12" class="p-1">
-                <label for="end">Date created: {{ dateCreated }}</label>
+              <BCol cols="6" class="p-1">
+                <label for="end">Date created: {{ moment(dateCreated).format('YYYY-MM-DD hh:mm') }}</label>
               </BCol>
-              <BCol cols="12" class="p-1">
+              <BCol cols="6" class="p-1">
                 <label for="end">User Modified: {{ userModified }}</label>
               </BCol>
-              <BCol cols="12" class="p-1">
-                <label for="end">Date Modified: {{ dateModified }} </label>
+              <BCol cols="6" class="p-1">
+                <label for="end">Date Modified: {{ }} </label>
               </BCol>
-              <div style="color: red;">
-                {{ error }}
-              </div>
+            </BRow>
+            <div style="color: red;">
+              {{ error }}
             </div>
           </div>
         </BCardBody>
