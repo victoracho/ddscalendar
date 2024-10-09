@@ -119,8 +119,14 @@ export const calendarOptions: F.CalendarOptions = {
     const dateCreated = moment(info.event._def.extendedProps.date_created).tz('America/New_York').format('DD/MM/YYYY HH:mm')
     const dateModified = moment(info.event._def.extendedProps.date_modified).tz('America/New_York').format('DD/MM/YYYY HH:mm')
     const start = moment(info.event.start).format('DD/MM/YYYY') + ' ' + info.timeText
+    const calendarStore = useCalendarStore()
+    let doctor = 'not specified'
+    if (info.event._def.extendedProps.doctor) {
+      doctor = calendarStore.doctors.filter(elem => elem.id == info.event._def.extendedProps.doctor)
+      doctor = doctor[0].name
+    }
     tippy(info.el, {
-      content: 'Paciente: ' + info.event.title + "\n" + 'Status: ' + info.event._def.extendedProps.status + "\n" + 'Substatus: ' + info.event._def.extendedProps.substatus + "\n" + 'Status anterior: ' + info.event._def.extendedProps.previous_status + "\n" + 'Usuario de creacion: ' + info.event._def.extendedProps.user + "\n" + 'Telefono: ' + info.event._def.extendedProps.phone + "\n" + 'Fecha de creacion: ' + dateCreated + "\n" + 'Fecha de Modificacion: ' + dateModified + "\n" + 'Usuario de modificacion: ' + info.event._def.extendedProps.user_modified + "\n" + 'Fecha de modificacion: ' + info.event._def.extendedProps.date_modified + "\n" + 'Fecha: ' + start + "\n",
+      content: 'Paciente: ' + info.event.title + "\n" + 'Doctor: ' + doctor + "\n" + 'Salon: ' + info.event._def.extendedProps.salon + "\n" + 'Status: ' + info.event._def.extendedProps.status + "\n" + 'Substatus: ' + info.event._def.extendedProps.substatus + "\n" + 'Status anterior: ' + info.event._def.extendedProps.previous_status + "\n" + 'Usuario de creacion: ' + info.event._def.extendedProps.user + "\n" + 'Telefono: ' + info.event._def.extendedProps.phone + "\n" + 'Fecha de creacion: ' + dateCreated + "\n" + 'Fecha de Modificacion: ' + dateModified + "\n" + 'Usuario de modificacion: ' + info.event._def.extendedProps.user_modified + "\n" + 'Fecha de modificacion: ' + info.event._def.extendedProps.date_modified + "\n" + 'Fecha: ' + start + "\n",
       placement: 'top',
       theme: 'light',
     });

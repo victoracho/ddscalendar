@@ -283,48 +283,36 @@ watch(() => selectedSlot.value.modal, () => {
       userModified.value = calendarStore.currentEvent.event.extendedProps.user_modified
       dateCreated.value = calendarStore.currentEvent.event.extendedProps.date_created
       dateModified.value = calendarStore.currentEvent.event.extendedProps.date_modified
+      selectedDoctor.value = null
+      selectedSalon.value = null
       setSalon(calendarStore.currentEvent.event.extendedProps.salon)
-      const element = eventDoctors.value.filter(elem => elem.id == calendarStore.currentEvent.event.extendedProps.doctor)
-      setDoctor(element[0].name, element[0].id)
-
+      if (calendarStore.currentEvent.event.extendedProps.doctor) {
+        const element = eventDoctors.value.filter(elem => elem.id == calendarStore.currentEvent.event.extendedProps.doctor)
+        setDoctor(element[0].name, element[0].id)
+      }
       // campos adicionales 
 
       let color = null
       let colorName = null
       //Substatus 
-      if (calendarStore.currentEvent.event.extendedProps.substatus == 'confirmed') {
-        color = '#00759A'
-        colorName = 'Confirmed'
-        setSubstatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.substatus == 'unconfirmed') {
-        color = '#f09707'
-        colorName = 'Unconfirmed'
-        setSubstatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.substatus == 'lm + tm') {
-        color = '#41f007'
-        colorName = 'LM + TM'
-        setSubstatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.substatus == 'n/a') {
-        color = '#808080'
-        colorName = 'N/A'
-        setSubstatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.substatus == 'phone disconnected') {
-        color = '#8c2800'
-        colorName = 'Phone Disconnected'
-        setSubstatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.substatus == 'no phone / email') {
-        color = '#d9a4e0'
-        colorName = 'No phone /email'
-        setSubstatusColor(color, colorName)
-      }
       if (calendarStore.currentEvent.event.extendedProps.substatus == 'not specified') {
         color = '#F0F0F0'
         colorName = 'Not Specified'
+        setSubstatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.substatus == 'simple') {
+        color = '#15870b'
+        colorName = 'Simple'
+        setSubstatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.substatus == 'combo simple') {
+        color = '#f0e351'
+        colorName = 'Combo Simple'
+        setSubstatusColor(color, colorName)
+      }
+      if (calendarStore.currentEvent.event.extendedProps.substatus == 'combo plus') {
+        color = '#d4021e'
+        colorName = 'Combo Plus'
         setSubstatusColor(color, colorName)
       }
 
