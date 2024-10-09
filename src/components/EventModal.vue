@@ -467,7 +467,7 @@ watch(() => selectedSlot.value.modal, () => {
             <BCol cols="12" class="p-1" v-if="!selectedSlot.add">
               <label for="end">Link to deal:</label>
               <a target="_blank" v-if="currentEvent.event.extendedProps.deal_id"
-                :href="'https://btx.dds.miami/crm/deal/details/' + currentEvent.event.extendedProps.deal_id + '/'">
+                :href="'https://daso.dds.miami/crm/deal/details/' + currentEvent.event.extendedProps.deal_id + '/'">
                 Click Here
               </a>
             </BCol>

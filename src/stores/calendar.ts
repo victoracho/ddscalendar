@@ -105,7 +105,6 @@ export const useCalendarStore = defineStore('calendar', () => {
           const formatoOriginalEnd = fechaEnd.format("YYYY-MM-DDTHH:mm:ss")
           value.end = formatoOriginalEnd
         }
-        console.log(value)
         const add = axios.post(axios.defaults.baseURL + '/sendEvent.php',
           {
             event: value,
