@@ -88,6 +88,7 @@ onMounted(async () => {
         name: 'Combo Plus'
       },
     ]
+
   eventSalons.value = [
     {
       name: 'salon 1'
@@ -95,8 +96,10 @@ onMounted(async () => {
     {
       name: 'salon 2'
     },
+    {
+      name: 'salon 3'
+    },
   ]
-
 })
 
 

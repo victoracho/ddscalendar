@@ -138,6 +138,9 @@ onMounted(() => {
       {
         name: 'salon 2'
       },
+      {
+        name: 'salon 3'
+      },
     ]
 })
 </script>
