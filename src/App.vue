@@ -7,47 +7,24 @@ import { ref, reactive, watch, computed, defineProps, onMounted } from "vue";
 import { useCalendarStore } from "./stores/calendar";
 import { storeToRefs } from 'pinia'
 import axios from 'axios'
-import { checkEvent, getDoctors } from './services/eventService'
+import { checkEvent } from './services/eventService'
 
 const date = ref(new Date())
 const calendarStore = useCalendarStore()
 const { status, currentDeal, quantity, deal } = storeToRefs(calendarStore)
 const activeSubstatus = ref(false)
-const activeDoctor = ref(false)
-const activeSalon = ref(false)
-const { selectedSubstatus, selectedDoctorName, selectedSalon } = storeToRefs(calendarStore)
+const { selectedSubstatus } = storeToRefs(calendarStore)
 const props = defineProps(['user', 'deal'])
 
 const toggleSubstatus = () => {
   activeSubstatus.value = true
 }
-const toggleDoctor = () => {
-  activeDoctor.value = true
-}
-const toggleSalon = () => {
-  activeSalon.value = true
-}
-
 const setSubstatusColor = (color, colorName) => {
   calendarStore.selectedSubstatus = color
   calendarStore.colorSubstatus = colorName
   activeSubstatus.value = false
 }
-const setDoctor = (id, name) => {
-  calendarStore.selectedDoctorName = name
-  calendarStore.selectedDoctorId = id
-  activeDoctor.value = false
-}
-
-const setSalon = (name) => {
-  calendarStore.selectedSalon = name
-  activeSalon.value = false
-}
-
 const selectorSubstatus = computed(() => (!calendarStore.colorSubstatus ? 'Select a Substatus' : '<span style="background: ' + calendarStore.selectedSubstatus + '"></span> ' + calendarStore.colorSubstatus))
-const selectorDoctor = computed(() => (!calendarStore.selectedDoctorName ? 'Select a Doctor' : '<span></span> ' + calendarStore.selectedDoctorName))
-const selectorSalon = computed(() => (!calendarStore.selectedSalon ? 'Select a Salon' : '<span></span> ' + calendarStore.selectedSalon))
-
 const dateClicked = (date: string) => {
   calendarStore.getCalendarApi && calendarStore.getCalendarApi.gotoDate(date)
 }
@@ -55,67 +32,29 @@ const router = useRouter()
 calendarStore.status.items =
   [
     {
-      hex: '#00afc7',
+      hex: '#bd7ac9',
       name: 'Evaluation',
       checked: true
     },
     {
-      hex: '#10e5fc',
+      hex: '#fff300',
       checked: true,
       name: 'Follow Up'
     },
     {
-      hex: '#bd7ac9',
-      checked: true,
-      name: 'Hyperbaric Chamber'
-    },
-    {
-      hex: '#e89b06',
-      checked: true,
-      name: 'Labs'
-    },
-    {
-      hex: '#e97090',
-      checked: true,
-      name: 'Massage'
-    },
-    {
-      hex: '#00ff00',
-      checked: true,
-      name: 'Post-op'
-    },
-    {
-      hex: '#fff300',
-      checked: true,
-      name: 'Pre-op appt'
-    },
-    {
-      hex: '#f69ac1',
-      checked: true,
-      name: 'Pre-op surgery'
-    },
-    {
-      hex: '#b57051',
+      hex: '#86b100',
       checked: true,
       name: 'Surgery'
     },
     {
-      hex: '#7b03fc',
-      checked: false,
-      name: 'Missing-appointment'
+      hex: '#333',
+      checked: true,
+      name: 'Deleted'
     },
   ]
 
 
 watch(calendarStore.status, () => {
-  calendarStore.getCalendarApi.refetchEvents()
-})
-
-watch(selectedSalon, () => {
-  calendarStore.getCalendarApi.refetchEvents()
-})
-
-watch(selectedDoctorName, () => {
   calendarStore.getCalendarApi.refetchEvents()
 })
 
@@ -126,22 +65,6 @@ onMounted(() => {
   // Aquí puedes usar la API de Bitrix24 si es necesario
   router.push('/')
   checkEvent()
-  calendarStore.doctors = getDoctors()
-  calendarStore.salons =
-    [
-      {
-        name: 'All Salons'
-      },
-      {
-        name: 'salon 1'
-      },
-      {
-        name: 'salon 2'
-      },
-      {
-        name: 'salon 3'
-      },
-    ]
 })
 </script>
 <template>
@@ -166,32 +89,6 @@ onMounted(() => {
         </div>
       </BCol>
       <br>
-      <BCol cols="12">
-        <div id="color-picker">
-          <div class="wrapper-dropdown">
-            <span @click="toggleDoctor()" v-html="selectorDoctor"></span>
-            <ul class="dropdown" v-show="activeDoctor">
-              <li v-for="doctor in calendarStore.doctors" @click="setDoctor(doctor.id, doctor.name)">
-                {{ doctor.name }}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </BCol>
-      <br>
-      <BCol cols="12">
-        <div id="color-picker">
-          <div class="wrapper-dropdown">
-            <span @click="toggleSalon()" v-html="selectorSalon"></span>
-            <ul class="dropdown" v-show="activeSalon">
-              <li v-for="salon in calendarStore.salons" @click="setSalon(salon.name)">
-                {{ salon.name }}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </BCol>
-      <br>
       <fieldset color-scheme="light">
         <label for="default-light" v-for="stat in status.items">
           <input :style="{ 'accent-color': stat.hex }" type="checkbox" id="accented-light" :checked="stat.checked"
@@ -202,29 +99,11 @@ onMounted(() => {
           <span v-if="stat.name == 'Follow Up'">
             {{ stat.name }} ({{ quantity['follow up'] }})
           </span>
-          <span v-if="stat.name == 'Hyperbaric Chamber'">
-            {{ stat.name }} ({{ quantity['hyperbaric chamber'] }})
-          </span>
-          <span v-if="stat.name == 'Labs'">
-            {{ stat.name }} ({{ quantity['labs'] }})
-          </span>
-          <span v-if="stat.name == 'Massage'">
-            {{ stat.name }} ({{ quantity['massage'] }})
-          </span>
-          <span v-if="stat.name == 'Post-op'">
-            {{ stat.name }} ({{ quantity['post-op'] }})
-          </span>
-          <span v-if="stat.name == 'Pre-op appt'">
-            {{ stat.name }} ({{ quantity['pre-op appt'] }})
-          </span>
-          <span v-if="stat.name == 'Pre-op surgery'">
-            {{ stat.name }} ({{ quantity['pre-op appt'] }})
-          </span>
           <span v-if="stat.name == 'Surgery'">
             {{ stat.name }} ({{ quantity['surgery'] }})
           </span>
-          <span v-if="stat.name == 'Missing-appointment'">
-            {{ stat.name }} ({{ quantity['missing-appointment'] }})
+          <span v-if="stat.name == 'Deleted'">
+            {{ stat.name }} ({{ quantity['deleted'] }})
           </span>
         </label>
       </fieldset>

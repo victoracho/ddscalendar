@@ -7,69 +7,35 @@ import axios from 'axios'
 import { useCalendarStore } from '@/stores/calendar';
 import { ref, watch, computed, onMounted } from 'vue';
 const calendarStore = useCalendarStore()
-const { modal, selectedSlot, currStatus, currSubstatus, currentDeal, deal, currentEvent, currSalon, currDoctor, doctors, salons } = storeToRefs(calendarStore)
-const { setModal, setAddedEvents, setSelectedSlot, getDoctors } = calendarStore
+const { modal, selectedSlot, currStatus, currSubstatus, currentDeal, deal, currentEvent } = storeToRefs(calendarStore)
+const { setModal, setAddedEvents, setSelectedSlot } = calendarStore
 const eventTitle = ref('')
 
 const activeStatus = ref(false)
 const activeSubstatus = ref(false)
-const activeSalon = ref(false)
-const activeDoctor = ref(false)
 
 const status = ref(null)
 const substatus = ref(null)
-const eventSalons = ref(null)
-const eventDoctors = ref(null)
 
 onMounted(async () => {
-  const response = await axios.get(axios.defaults.baseURL + "getDoctors.php")
-  const data = response.data
-  if (data.message == 'success') {
-    eventDoctors.value = data.results
-    eventDoctors.value.shift()
-  }
 
   status.value =
     [
       {
-        hex: '#00afc7',
+        hex: '#bd7ac9',
         name: 'Evaluation'
       },
       {
-        hex: '#10e5fc',
-        name: 'Follow up'
-      },
-      {
-        hex: '#bd7ac9',
-        name: 'Hyperbaric Chamber'
-      },
-      {
-        hex: '#e89b06',
-        name: 'Labs'
-      },
-      {
-        hex: '#e97090',
-        name: 'Massage'
-      },
-      {
-        hex: '#00ff00',
-        name: 'Post-op'
-      },
-      {
         hex: '#fff300',
-        name: 'Pre-op appt'
-      },
-      {
-        hex: '#b57051',
-        name: 'Pre-op Surgery'
+        name: 'Follow up'
       },
       {
         hex: '#86b100',
         name: 'Surgery'
       },
       {
-        hex: '#7b03fc',
-        name: 'Missing-appointment'
+        hex: '#333',
+        name: 'Deleted'
       },
     ]
 
@@ -88,18 +54,6 @@ onMounted(async () => {
         name: 'Combo Plus'
       },
     ]
-
-  eventSalons.value = [
-    {
-      name: 'salon 1'
-    },
-    {
-      name: 'salon 2'
-    },
-    {
-      name: 'salon 3'
-    },
-  ]
 })
 
 
@@ -110,8 +64,6 @@ const endDateTime = ref<string | Date | null>(addHours(new Date(), 1))
 const contentText = ref('')
 const selectedSubStatus = ref('')
 const selectedStatus = ref('')
-const selectedSalon = ref('')
-const selectedDoctor = ref('')
 const colorSubstatus = ref('')
 const colorStatus = ref('')
 const error = ref(null)
@@ -119,8 +71,6 @@ const none = ref(null)
 const titleState = computed(() => (eventTitle.value?.length > 2 ? true : false))
 const selectorSubstatus = computed(() => (!selectedSubStatus.value ? 'Select a Substatus' : '<span style="background: ' + selectedSubStatus.value + '"></span> ' + colorSubstatus.value))
 const selectorStatus = computed(() => (!selectedStatus.value ? 'Select a Status' : '<span style="background: ' + selectedStatus.value + '"></span> ' + colorStatus.value))
-const selectorSalon = computed(() => (!selectedSalon.value ? 'Select a salon' : '<span</span> ' + selectedSalon.value))
-const selectorDoctor = computed(() => (!selectedDoctor.value ? 'Select a  doctor' : '<span></span> ' + selectedDoctor.value))
 const userCreated = ref(null)
 const userModified = ref(null)
 const dateCreated = ref(null)
@@ -131,30 +81,12 @@ const toggleSubstatus = () => {
 const toggleStatus = () => {
   activeStatus.value = true
 }
-const toggleSalon = () => {
-  activeSalon.value = true
-}
-const toggleDoctor = () => {
-  activeDoctor.value = true
-}
 
 const setSubstatusColor = (color, colorName) => {
   selectedSubStatus.value = color
   colorSubstatus.value = colorName
   activeSubstatus.value = false
   currSubstatus.value = colorName
-}
-
-const setSalon = (salon) => {
-  selectedSalon.value = salon
-  activeSalon.value = false
-  currSalon.value = salon
-}
-
-const setDoctor = (doctor, id) => {
-  selectedDoctor.value = doctor
-  currDoctor.value = id
-  activeDoctor.value = false
 }
 
 const setStatusColor = (color, colorName) => {
@@ -172,19 +104,10 @@ const addEvent = () => {
   if (!currStatus.value) {
     error.value = 'you have to select an status '
   }
-  if (!currSalon.value) {
-    error.value = 'you have to select a salon'
-  }
-  if (!currDoctor.value) {
-    error.value = 'you have to select a doctor'
-  }
-
   if (!error.value) {
     setAddedEvents({
       substatus: currSubstatus.value.toLowerCase(),
       BackgroundColor: currStatus.value.toLowerCase(),
-      salon: currSalon.value.toLowerCase(),
-      doctor: currDoctor.value,
       start: startDateTime.value,
       end: endDateTime.value,
       title: eventTitle.value,
@@ -201,18 +124,10 @@ const editEvent = () => {
   if (!currStatus.value) {
     error.value = 'you have to select an status '
   }
-  if (!currSalon.value) {
-    error.value = 'you have to select a salon'
-  }
-  if (!currDoctor.value) {
-    error.value = 'you have to select a doctor'
-  }
   if (currSubstatus.value && currStatus.value) {
     setAddedEvents({
       substatus: currSubstatus.value.toLowerCase(),
       BackgroundColor: currStatus.value.toLowerCase(),
-      salon: currSalon.value.toLowerCase(),
-      doctor: currDoctor.value,
       start: startDateTime.value,
       end: endDateTime.value,
       title: eventTitle.value,
@@ -263,16 +178,12 @@ watch(() => selectedSlot.value.modal, () => {
       contentText.value = null
       selectedSubStatus.value = null
       selectedStatus.value = null
-      selectedDoctor.value = null
-      selectedSalon.value = null
       colorSubstatus.value = null
       colorStatus.value = null
       userCreated.value = null
       userModified.value = null
       dateCreated.value = null
       dateModified.value = null
-      currDoctor.value = null
-      currSalon.value = null
 
       // campos adicionales
 
@@ -286,13 +197,6 @@ watch(() => selectedSlot.value.modal, () => {
       userModified.value = calendarStore.currentEvent.event.extendedProps.user_modified
       dateCreated.value = calendarStore.currentEvent.event.extendedProps.date_created
       dateModified.value = calendarStore.currentEvent.event.extendedProps.date_modified
-      selectedDoctor.value = null
-      selectedSalon.value = null
-      setSalon(calendarStore.currentEvent.event.extendedProps.salon)
-      if (calendarStore.currentEvent.event.extendedProps.doctor) {
-        const element = eventDoctors.value.filter(elem => elem.id == calendarStore.currentEvent.event.extendedProps.doctor)
-        setDoctor(element[0].name, element[0].id)
-      }
       // campos adicionales 
 
       let color = null
@@ -330,44 +234,14 @@ watch(() => selectedSlot.value.modal, () => {
         colorName = 'Follow up'
         setStatusColor(color, colorName)
       }
-      if (calendarStore.currentEvent.event.extendedProps.status == 'hyperbaric chamber') {
-        color = '#bd7ac9'
-        colorName = 'Hyperbaric chamber'
-        setStatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.status == 'labs') {
-        color = '#e89b06'
-        colorName = 'Labs'
-        setStatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.status == 'massage') {
-        color = '#e97090'
-        colorName = 'Massage'
-        setStatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.status == 'post-op') {
-        color = '#00ff00'
-        colorName = 'Post-op'
-        setStatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.status == 'pre-op appt') {
-        color = '#fff300'
-        colorName = 'Pre-op appt'
-        setStatusColor(color, colorName)
-      }
-      if (calendarStore.currentEvent.event.extendedProps.status == 'pre-op surgery') {
-        color = '#b57051'
-        colorName = 'Pre-op surgery'
-        setStatusColor(color, colorName)
-      }
       if (calendarStore.currentEvent.event.extendedProps.status == 'surgery') {
         color = '#86b100'
         colorName = 'Surgery'
         setStatusColor(color, colorName)
       }
-      if (calendarStore.currentEvent.event.extendedProps.status == 'missing-appointment') {
-        color = '#7b03fc'
-        colorName = 'Missing Appointment'
+      if (calendarStore.currentEvent.event.extendedProps.status == 'deleted') {
+        color = '#333'
+        colorName = 'Deleted'
         setStatusColor(color, colorName)
       }
       // to do substatus and title  
@@ -440,37 +314,11 @@ watch(() => selectedSlot.value.modal, () => {
                   </div>
                 </div>
               </BCol>
-              <BCol cols="3" class="p-1">
-                <label for="end">Doctor:</label>
-                <div id="color-picker">
-                  <div class="wrapper-dropdown">
-                    <span @click="toggleDoctor()" v-html="selectorDoctor"></span>
-                    <ul class="dropdown" v-show="activeDoctor">
-                      <li v-for="doctor in eventDoctors" @click="setDoctor(doctor.name, doctor.id)">
-                        <span></span> {{ doctor.name }}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </BCol>
-              <BCol cols="3" class="p-1">
-                <label for="end">Salon:</label>
-                <div id="color-picker">
-                  <div class="wrapper-dropdown">
-                    <span @click="toggleSalon()" v-html="selectorSalon"></span>
-                    <ul class="dropdown" v-show="activeSalon">
-                      <li v-for="salon in eventSalons" @click="setSalon(salon.name)">
-                        <span></span> {{ salon.name }}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </BCol>
             </BRow>
             <BCol cols="12" class="p-1" v-if="!selectedSlot.add">
               <label for="end">Link to deal:</label>
               <a target="_blank" v-if="currentEvent.event.extendedProps.deal_id"
-                :href="'https://btx.dds.miami/crm/deal/details/' + currentEvent.event.extendedProps.deal_id + '/'">
+                :href="'https://crm.eyescolorlab.com/crm/deal/details/' + currentEvent.event.extendedProps.deal_id">
                 Click Here
               </a>
             </BCol>

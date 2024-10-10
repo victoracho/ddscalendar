@@ -23,7 +23,7 @@ import router from './router'
 
 const app = createApp(App)
 
-axios.defaults.baseURL = 'https://design.dasoddscolor.com/'
+axios.defaults.baseURL = 'http://localhost/dds/'
 
 FloatingVue.options.distance = 2
 

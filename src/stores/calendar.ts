@@ -16,19 +16,12 @@ export const useCalendarStore = defineStore('calendar', () => {
   const currentUser = ref(null)
   const currStatus = ref(null)
   const currSubstatus = ref(null)
-  const currSalon = ref(null)
-  const currDoctor = ref(null)
 
   const selectedSubstatus = ref('')
-  const selectedSalon = ref('All Salons')
-  const selectedDoctorId = ref('All Doctors')
-  const selectedDoctorName = ref('All Doctors')
   const colorSubstatus = ref('All Substatus')
 
   const modal = ref(false)
   const refetch = ref(false)
-  const doctors = ref()
-  const salons = ref([])
   const addedEvents = ref<CustomEvent[]>([])
   const selectedSlot = ref<SelectedSlot>({
     add: true,
@@ -78,14 +71,8 @@ export const useCalendarStore = defineStore('calendar', () => {
     {
       'evaluation': 0,
       'follow up': 0,
-      'hyperbaric chamber': 0,
-      'labs': 0,
-      'massage': 0,
-      'post-op': 0,
-      'pre-op appt': 0,
-      'pre-op surgery': 0,
       'surgery': 0,
-      'missing-appointment': 0,
+      'deleted': 0,
     }
   )
 
@@ -174,17 +161,10 @@ export const useCalendarStore = defineStore('calendar', () => {
     deal,
     deal_id,
     deal_name,
-    doctors,
-    salons,
     currentUser,
     currStatus,
     currSubstatus,
-    currSalon,
-    currDoctor,
     selectedSubstatus,
-    selectedDoctorName,
-    selectedDoctorId,
-    selectedSalon,
     colorSubstatus,
     currentEvent,
     setCurrentEvent,

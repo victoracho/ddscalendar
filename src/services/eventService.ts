@@ -18,23 +18,13 @@ export const fetchEvent = async ({
   range: string[]
 }) => {
   const calendarStore = useCalendarStore()
-  const { colorSubstatus, selectedDoctorId, selectedSalon } = storeToRefs(calendarStore)
+  const { colorSubstatus } = storeToRefs(calendarStore)
   const checked = calendarStore.status.items.filter((x) => x.checked).map((x) => x.name).join("', '")
   const substatus = colorSubstatus.value
-  const doctor = selectedDoctorId.value
-  const salon = selectedSalon.value
-  const eventsForYear = await getData(axios.defaults.baseURL + "appointments.php?range=" + range + "&status=" + checked + "&substatus=" + substatus + '&doctor=' + doctor + '&salon=' + salon)
+  const eventsForYear = await getData(axios.defaults.baseURL + "appointments.php?range=" + range + "&status=" + checked + "&substatus=" + substatus)
   return eventsForYear
 }
 
-export const getDoctors = async () => {
-  const calendarStore = useCalendarStore()
-  const response = await axios.get(axios.defaults.baseURL + "getDoctors.php")
-  const data = response.data
-  if (data.message == 'success') {
-    calendarStore.doctors = data.results
-  }
-}
 
 export const checkEvent = async (deal) => {
   const deal_id = inject('deal')
