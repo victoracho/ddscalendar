@@ -23,7 +23,7 @@ import router from './router'
 
 const app = createApp(App)
 
-axios.defaults.baseURL = 'http://localhost/dds/'
+axios.defaults.baseURL = 'https://eyescolorlab.dasoddscolor.com/'
 
 FloatingVue.options.distance = 2
 
